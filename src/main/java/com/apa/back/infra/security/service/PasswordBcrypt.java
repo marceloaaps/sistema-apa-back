@@ -1,4 +1,4 @@
-package com.apa.back.infra.security.configurations;
+package com.apa.back.infra.security.service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

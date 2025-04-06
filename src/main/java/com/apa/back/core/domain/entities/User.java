@@ -1,7 +1,7 @@
 package com.apa.back.core.domain.entities;
 
+import com.apa.back.core.domain.enums.UserRole;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +32,10 @@ public class User {
 
     @Column(nullable = false, name = "data_nascimento")
     private LocalDate dataNascimento;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role", columnDefinition = "user_role_enum", insertable = false)
+    private UserRole role;
 
 
 }

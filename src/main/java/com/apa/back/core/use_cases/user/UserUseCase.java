@@ -1,16 +1,13 @@
 package com.apa.back.core.use_cases.user;
 
 import com.apa.back.core.domain.entities.User;
+import com.apa.back.core.domain.enums.UserRole;
 import com.apa.back.core.domain.repositories.UserRepository;
-import com.apa.back.infra.security.configurations.PasswordBcrypt;
+import com.apa.back.infra.security.service.PasswordBcrypt;
 import com.apa.back.presentation.dtos.AuthDto;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDate;
 
 @Service
 public class UserUseCase {
@@ -24,21 +21,23 @@ public class UserUseCase {
     }
 
 
-    public void register(@Valid @RequestBody AuthDto authDto) {
-        User user = new User();
 
+    public void register(AuthDto authDto) {
         if (userRepository.verifyEmail(authDto.email())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado.");
         }
 
         var password = passwordBcrypt.hashPassword(authDto.senha());
 
+        User user = new User();
         user.setNome(authDto.nome());
         user.setEmail(authDto.email());
         user.setSenha(password);
         user.setDataNascimento(authDto.dataNascimento());
+
         userRepository.save(user);
     }
+
 
 
 }
