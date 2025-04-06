@@ -8,29 +8,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
 
-@Table(name = "usuarios")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "usuarios")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "id_usuario", nullable = false)
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String nome;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(nullable = false, name = "senha")
+    private String senha;
 
     @Column(nullable = false)
     private String email;
 
-    @Column(name = "data_nascimento", nullable = false)
+    @Column(nullable = false, name = "data_nascimento")
     private LocalDate dataNascimento;
 
 
