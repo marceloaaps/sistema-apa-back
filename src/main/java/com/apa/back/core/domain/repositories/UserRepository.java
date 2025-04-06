@@ -10,5 +10,4 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByEmail(String email);
-    User insert(@Valid @RequestBody User user);
 }

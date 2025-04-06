@@ -3,8 +3,11 @@ package com.apa.back.presentation.dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+
+import java.time.LocalDate;
 
 
-//Falta resto dos parametros/atributos
-public record AuthDto(@NotBlank @Email String email, @NotBlank String password) {
+public record AuthDto(@NotBlank String name, @Email String email, @NotNull @Past LocalDate dataNascimento, @NotBlank String password) {
 }
