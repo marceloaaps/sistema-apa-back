@@ -3,6 +3,7 @@ package com.apa.back.presentation.controllers;
 import com.apa.back.core.use_cases.auth.AuthUseCase;
 import com.apa.back.presentation.dtos.AuthDto;
 import com.apa.back.presentation.dtos.LoginRequest;
+import com.apa.back.presentation.dtos.LoginResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +27,10 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        var jwt = authUseCase.login(loginRequest);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        var response = authUseCase.login(loginRequest);
 
-        return ResponseEntity.status(200).body(jwt);
+        return ResponseEntity.status(200).body(response);
 
     }
 

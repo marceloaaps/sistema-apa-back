@@ -5,6 +5,7 @@ import com.apa.back.core.domain.repositories.UserRepository;
 import com.apa.back.infra.security.service.PasswordBcrypt;
 import com.apa.back.presentation.dtos.AuthDto;
 import com.apa.back.presentation.dtos.LoginRequest;
+import com.apa.back.presentation.dtos.LoginResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -21,6 +22,8 @@ public class AuthUseCase {
     private final PasswordBcrypt passwordBcrypt;
     private final UserRepository userRepository;
     private final JwtEncoder jwtEncoder;
+    private LoginResponse loginResponse;
+
 
     private final Long expirationTime = 3600L;
 
@@ -49,7 +52,7 @@ public class AuthUseCase {
         userRepository.save(user);
     }
 
-    public String login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
 
         var now = Instant.now();
 
@@ -57,7 +60,6 @@ public class AuthUseCase {
 
         if (user.isEmpty() || !passwordBcrypt.verifyPassword(loginRequest.senha(), user.get().getSenha())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Credencial inválida.");
-
         }
 
         var claims = JwtClaimsSet.builder().issuer("mybackend").subject(user
@@ -69,7 +71,7 @@ public class AuthUseCase {
                         now.plusSeconds(expirationTime))
                 .build();
 
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return new LoginResponse(jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(), expirationTime);
     }
 
 
