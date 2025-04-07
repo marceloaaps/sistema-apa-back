@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public record AuthDto(
         @NotBlank String nome,
 
-        @Email String email,
+        @NotBlank @Email String email,
 
         @NotNull @Past LocalDate dataNascimento,
 
