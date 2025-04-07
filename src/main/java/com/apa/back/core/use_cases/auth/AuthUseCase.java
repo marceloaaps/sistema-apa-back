@@ -7,7 +7,6 @@ import com.apa.back.presentation.dtos.AuthDto;
 import com.apa.back.presentation.dtos.LoginRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -17,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.Instant;
 
 @Service
-public class UserUseCase {
+public class AuthUseCase {
 
     private final PasswordBcrypt passwordBcrypt;
     private final UserRepository userRepository;
@@ -25,7 +24,7 @@ public class UserUseCase {
 
     private final Long expirationTime = 3600L;
 
-    public UserUseCase(PasswordBcrypt passwordBcrypt, UserRepository userRepository, JwtEncoder jwtEncoder) {
+    public AuthUseCase(PasswordBcrypt passwordBcrypt, UserRepository userRepository, JwtEncoder jwtEncoder) {
         this.passwordBcrypt = passwordBcrypt;
         this.userRepository = userRepository;
         this.jwtEncoder = jwtEncoder;
