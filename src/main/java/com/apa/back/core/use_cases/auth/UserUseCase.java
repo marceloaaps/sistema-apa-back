@@ -57,7 +57,8 @@ public class UserUseCase {
         var user = userRepository.findByEmail(loginRequest.email());
 
         if (user.isEmpty() || !passwordBcrypt.verifyPassword(loginRequest.senha(), user.get().getSenha())){
-            throw new BadCredentialsException("Credencial invalida.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Credencial inválida.");
+
         }
 
         var claims = JwtClaimsSet.builder().issuer("mybackend").subject(user
