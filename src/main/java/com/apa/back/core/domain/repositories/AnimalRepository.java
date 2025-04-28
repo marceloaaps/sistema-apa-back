@@ -1,22 +1,14 @@
 package com.apa.back.core.domain.repositories;
 
-import com.apa.back.core.domain.entities.Animal;
-import com.apa.back.presentation.dtos.AnimalDTO;
-
+import com.apa.back.core.domain.entities.Animais;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface AnimalRepository extends JpaRepository<Animal, Long> {
+public interface AnimalRepository extends JpaRepository<Animais, Long> {
 
-    @Query("SELECT new com.apa.back.presentation.dtos.AnimalDTO(a.id, a.nome, a.raca, a.idade, a.disponivelParaAdocao) FROM Animal a")
-    List<AnimalDTO> findAllAnimalsForAdoption();
+    List<Animais> findAllByDisponivelParaAdocaoTrue();
 
-    @Query("SELECT new com.apa.back.presentation.dtos.AnimalDTO(a.id, a.nome, a.raca, a.idade, a.disponivelParaAdocao) " +
-            "FROM Animal a WHERE a.id = :id")
-    Optional<AnimalDTO> findAnimalById(Long id);
 }

@@ -1,18 +1,31 @@
 package com.apa.back.presentation.dtos;
 
-public class AnimalDTO {
-    public Long id;
-    public String nome;
-    public String raca;
-    public Integer idade;
-    public Boolean disponivelParaAdocao;
+import lombok.Data;
+import java.time.LocalDate;
 
-    public AnimalDTO(Long id, String nome, String raca, Integer idade, Boolean disponivelParaAdocao) {
+@Data
+public class AnimalDTO {
+
+    private Long id;
+    private String nome;
+    private Integer idade;
+    private String raca;
+    private Long idSaude;
+    private String comportamento;
+    private String historico;
+    private LocalDate dataCadastro;
+    private Boolean disponivelParaAdocao;
+
+    public AnimalDTO(Long id, String nome, Integer idade, String raca, Long idSaude,
+                      String comportamento, String historico, LocalDate dataCadastro, Boolean disponivelParaAdocao) {
         this.id = id;
         this.nome = nome;
-        this.raca = raca;
         this.idade = idade;
+        this.raca = raca;
+        this.idSaude = idSaude;
+        this.comportamento = comportamento;
+        this.historico = historico;
+        this.dataCadastro = dataCadastro;
         this.disponivelParaAdocao = disponivelParaAdocao;
     }
-
 }

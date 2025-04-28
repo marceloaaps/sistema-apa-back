@@ -1,7 +1,6 @@
 package com.apa.back.core.domain.repositories;
 
 import com.apa.back.core.domain.entities.Animal;
-import com.apa.back.presentation.dtos.AnimalDTO;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

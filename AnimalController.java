@@ -1,8 +1,5 @@
 package com.apa.back.presentation.controllers;
 
-import com.apa.back.presentation.dtos.AnimalDTO;
-import com.apa.back.core.domain.repositories.AnimalRepository;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
