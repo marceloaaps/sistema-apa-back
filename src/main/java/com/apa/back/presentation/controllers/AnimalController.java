@@ -1,7 +1,7 @@
 package com.apa.back.presentation.controllers;
 
-import com.apa.back.core.domain.entities.Animais;
-import com.apa.back.core.use_cases.AnimalUseCase;
+import com.apa.back.core.domain.entities.Animal;
+import com.apa.back.core.use_cases.animal.AnimalUseCase;
 import com.apa.back.presentation.dtos.AnimalDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +20,14 @@ public class AnimalController {
     }
 
     @PostMapping
-    public ResponseEntity<Animais> createAnimal(@RequestBody AnimalDTO animalDTO) {
-        Animais savedAnimal = animalUseCase.createAnimal(animalDTO);
+    public ResponseEntity<Animal> createAnimal(@RequestBody AnimalDTO animalDTO) {
+        Animal savedAnimal = animalUseCase.createAnimal(animalDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAnimal);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Animais> updateAnimal(@PathVariable Long id, @RequestBody AnimalDTO animalDTO) {
-        Animais updatedAnimal = animalUseCase.updateAnimal(id, animalDTO);
+    public ResponseEntity<Animal> updateAnimal(@PathVariable Long id, @RequestBody AnimalDTO animalDTO) {
+        Animal updatedAnimal = animalUseCase.updateAnimal(id, animalDTO);
         return updatedAnimal != null ?
                 ResponseEntity.status(HttpStatus.OK).body(updatedAnimal) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -41,8 +41,8 @@ public class AnimalController {
     }
 
     @PatchMapping("/{id}/restore")
-    public ResponseEntity<Animais> restoreAnimal(@PathVariable Long id) {
-        Animais restoredAnimal = animalUseCase.restoreAnimal(id);
+    public ResponseEntity<Animal> restoreAnimal(@PathVariable Long id) {
+        Animal restoredAnimal = animalUseCase.restoreAnimal(id);
         return restoredAnimal != null ?
                 ResponseEntity.status(HttpStatus.OK).body(restoredAnimal) :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();

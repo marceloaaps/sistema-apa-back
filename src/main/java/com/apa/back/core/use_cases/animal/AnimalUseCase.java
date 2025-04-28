@@ -1,6 +1,6 @@
-package com.apa.back.core.use_cases;
+package com.apa.back.core.use_cases.animal;
 
-import com.apa.back.core.domain.entities.Animais;
+import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.repositories.AnimalRepository;
 import com.apa.back.presentation.dtos.AnimalDTO;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ public class AnimalUseCase {
         this.animalRepository = animalRepository;
     }
 
-    public Animais createAnimal(AnimalDTO animalDTO) {
-        Animais animal = new Animais(
+    public Animal createAnimal(AnimalDTO animalDTO) {
+        Animal animal = new Animal(
                 null,
                 animalDTO.getNome(),
                 animalDTO.getIdade(),
@@ -34,14 +34,14 @@ public class AnimalUseCase {
         return animalRepository.save(animal);
     }
 
-    public Animais updateAnimal(Long id, AnimalDTO animalDTO) {
-        Optional<Animais> existingAnimal = animalRepository.findById(id);
+    public Animal updateAnimal(Long id, AnimalDTO animalDTO) {
+        Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
             return null;
         }
 
-        Animais animal = existingAnimal.get();
+        Animal animal = existingAnimal.get();
         animal.setNome(animalDTO.getNome());
         animal.setIdade(animalDTO.getIdade());
         animal.setRaca(animalDTO.getRaca());
@@ -55,13 +55,13 @@ public class AnimalUseCase {
     }
 
     public boolean deleteAnimal(Long id, Integer deletadoPor) {
-        Optional<Animais> existingAnimal = animalRepository.findById(id);
+        Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
             return false;
         }
 
-        Animais animal = existingAnimal.get();
+        Animal animal = existingAnimal.get();
         animal.setDisponivelParaAdocao(false);
         animal.setDeletadoEm(LocalDate.now());
         animal.setDeletadoPor(deletadoPor);
@@ -70,14 +70,14 @@ public class AnimalUseCase {
         return true;
     }
 
-    public Animais restoreAnimal(Long id) {
-        Optional<Animais> existingAnimal = animalRepository.findById(id);
+    public Animal restoreAnimal(Long id) {
+        Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
             return null;
         }
 
-        Animais animal = existingAnimal.get();
+        Animal animal = existingAnimal.get();
         animal.setDeletadoEm(null);
         animal.setDeletadoPor(null);
         animal.setDisponivelParaAdocao(true);
@@ -86,13 +86,13 @@ public class AnimalUseCase {
     }
 
     public AnimalDTO getAnimalById(Long id) {
-        Optional<Animais> existingAnimal = animalRepository.findById(id);
+        Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
             return null;
         }
 
-        Animais animal = existingAnimal.get();
+        Animal animal = existingAnimal.get();
         return new AnimalDTO(
                 animal.getId(),
                 animal.getNome(),
@@ -107,8 +107,8 @@ public class AnimalUseCase {
     }
 
     public List<AnimalDTO> getAnimaisDisponiveis() {
-        List<Animais> animaisDisponiveis = animalRepository.findAllByDisponivelParaAdocaoTrue();
-        return animaisDisponiveis.stream()
+        List<Animal> animalDisponiveis = animalRepository.findAllByDisponivelParaAdocaoTrue();
+        return animalDisponiveis.stream()
                 .map(animal -> new AnimalDTO(
                         animal.getId(),
                         animal.getNome(),
