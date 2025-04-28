@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/animais")
+@RequestMapping("/animals")
 public class AnimalController {
 
     private final AnimalUseCase animalUseCase;
