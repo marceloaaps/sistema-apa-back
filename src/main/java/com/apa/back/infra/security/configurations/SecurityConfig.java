@@ -40,17 +40,19 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/auth/v1/**").permitAll()
+                        // Permitir todas as requisições sem autenticação
+                        .requestMatchers("/**").permitAll()
 
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // Permite qualquer outra requisição
                 )
-                .csrf(csrf -> csrf.disable())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .csrf(csrf -> csrf.disable()) // Desabilita a proteção contra CSRF
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())) // Mantém a configuração de JWT
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Mantém a política de sessão sem estado
 
         return http.build();
     }
+
 
     @Bean
     public JwtEncoder jwtEncoder(){
