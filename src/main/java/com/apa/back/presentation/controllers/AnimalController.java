@@ -3,6 +3,9 @@ package com.apa.back.presentation.controllers;
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.use_cases.animal.AnimalUseCase;
 import com.apa.back.presentation.dtos.AnimalDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,8 +60,9 @@ public class AnimalController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AnimalDTO>> getAnimaisDisponiveis() {
-        List<AnimalDTO> animaisDisponiveis = animalUseCase.getAnimaisDisponiveis();
+    public ResponseEntity<Page<AnimalDTO>> getAnimaisDisponiveis(
+            @PageableDefault(size = 20) Pageable pageable) {
+        Page<AnimalDTO> animaisDisponiveis = animalUseCase.getAnimaisDisponiveis(pageable);
         return ResponseEntity.ok(animaisDisponiveis);
     }
 }

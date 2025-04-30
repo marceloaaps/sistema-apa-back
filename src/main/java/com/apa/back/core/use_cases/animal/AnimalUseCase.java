@@ -3,6 +3,8 @@ package com.apa.back.core.use_cases.animal;
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.repositories.AnimalRepository;
 import com.apa.back.presentation.dtos.AnimalDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -106,20 +108,19 @@ public class AnimalUseCase {
         );
     }
 
-    public List<AnimalDTO> getAnimaisDisponiveis() {
-        List<Animal> animalDisponiveis = animalRepository.findAllByDisponivelParaAdocaoTrue();
-        return animalDisponiveis.stream()
-                .map(animal -> new AnimalDTO(
-                        animal.getId(),
-                        animal.getNome(),
-                        animal.getIdade(),
-                        animal.getRaca(),
-                        animal.getIdSaude(),
-                        animal.getComportamento(),
-                        animal.getHistorico(),
-                        animal.getDataCadastro(),
-                        animal.isDisponivelParaAdocao()
-                ))
-                .collect(Collectors.toList());
+    public Page<AnimalDTO> getAnimaisDisponiveis(Pageable pageable) {
+        Page<Animal> animais = animalRepository.findAllByDisponivelParaAdocaoTrue(pageable);
+        return animais.map(animal -> new AnimalDTO(
+                animal.getId(),
+                animal.getNome(),
+                animal.getIdade(),
+                animal.getRaca(),
+                animal.getIdSaude(),
+                animal.getComportamento(),
+                animal.getHistorico(),
+                animal.getDataCadastro(),
+                animal.isDisponivelParaAdocao()
+        ));
     }
+
 }
