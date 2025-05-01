@@ -3,7 +3,9 @@ package com.apa.back.core.use_cases.animal;
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.repositories.AnimalRepository;
 import com.apa.back.presentation.dtos.AnimalDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -89,7 +91,7 @@ public class AnimalUseCase {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
-            return null;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Animal não encontrado");
         }
 
         Animal animal = existingAnimal.get();
