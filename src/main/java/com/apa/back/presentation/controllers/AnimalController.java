@@ -38,11 +38,11 @@ public class AnimalController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAnimal(@PathVariable Long id, @RequestParam("deletadoPor") Integer deletadoPor) {
-        boolean deleted = animalUseCase.deleteAnimal(id, deletadoPor);
-        return deleted ? ResponseEntity.status(HttpStatus.NO_CONTENT).build() :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<Void> deleteAnimal(@PathVariable Long id, @AuthenticationPrincipal UsuarioLogado usuario) {
+        boolean deleted = animalUseCase.deleteAnimal(id, usuario.getId());
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
+
 
     @PatchMapping("/{id}/restore")
     public ResponseEntity<Animal> restoreAnimal(@PathVariable Long id) {

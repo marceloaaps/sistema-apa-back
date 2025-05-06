@@ -3,9 +3,9 @@ package com.apa.back.core.use_cases.animal;
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.repositories.AnimalRepository;
 import com.apa.back.presentation.dtos.AnimalDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -91,7 +91,7 @@ public class AnimalUseCase {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
-            return null;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Animal não encontrado");
         }
 
         Animal animal = existingAnimal.get();
@@ -108,19 +108,20 @@ public class AnimalUseCase {
         );
     }
 
-    public Page<AnimalDTO> getAnimaisDisponiveis(Pageable pageable) {
-        Page<Animal> animais = animalRepository.findAllByDisponivelParaAdocaoTrue(pageable);
-        return animais.map(animal -> new AnimalDTO(
-                animal.getId(),
-                animal.getNome(),
-                animal.getIdade(),
-                animal.getRaca(),
-                animal.getIdSaude(),
-                animal.getComportamento(),
-                animal.getHistorico(),
-                animal.getDataCadastro(),
-                animal.isDisponivelParaAdocao()
-        ));
+    public List<AnimalDTO> getAnimaisDisponiveis() {
+        List<Animal> animalDisponiveis = animalRepository.findAllByDisponivelParaAdocaoTrue();
+        return animalDisponiveis.stream()
+                .map(animal -> new AnimalDTO(
+                        animal.getId(),
+                        animal.getNome(),
+                        animal.getIdade(),
+                        animal.getRaca(),
+                        animal.getIdSaude(),
+                        animal.getComportamento(),
+                        animal.getHistorico(),
+                        animal.getDataCadastro(),
+                        animal.isDisponivelParaAdocao()
+                ))
+                .collect(Collectors.toList());
     }
-
 }
