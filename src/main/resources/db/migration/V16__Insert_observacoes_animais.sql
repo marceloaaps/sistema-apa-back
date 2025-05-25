@@ -750,7 +750,7 @@ insert into observacoes_animais (id_animal, data_observacao, observacao, id_resp
 insert into observacoes_animais (id_animal, data_observacao, observacao, id_responsavel, deletado_em) values (773, '2025-03-05', 'Has a loud bark', 495, null);
 insert into observacoes_animais (id_animal, data_observacao, observacao, id_responsavel, deletado_em) values (475, '2024-05-12', 'Has a small scar on its left ear', 804, '2024-05-01');
 insert into observacoes_animais (id_animal, data_observacao, observacao, id_responsavel, deletado_em) values (821, '2024-11-20', 'Missing a tail', 770, '2024-05-08');
-insert into observacoes_animais (id_animal, data_observacao, observacao, id_responsavel, deletado_em) values (994, '2024-12-24', 'Has a unique spot pattern on its fur', 2, '2024-11-02');
+insert into observacoes_animais (id_animal, data_observacao, observacao, id_responsavel, deletado_em) values (994, '2024-12-24', 'Has a unique spot pattern on its fur', 3, '2024-11-02');
 insert into observacoes_animais (id_animal, data_observacao, observacao, id_responsavel, deletado_em) values (137, '2024-10-16', 'Wearing a red collar', 576, '2024-12-12');
 insert into observacoes_animais (id_animal, data_observacao, observacao, id_responsavel, deletado_em) values (232, '2025-03-29', 'Very friendly towards humans', 9, '2024-10-18');
 insert into observacoes_animais (id_animal, data_observacao, observacao, id_responsavel, deletado_em) values (541, '2025-01-29', 'Recently had surgery on its paw', 356, '2024-10-31');
