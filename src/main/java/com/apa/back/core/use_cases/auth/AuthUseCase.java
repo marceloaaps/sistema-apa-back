@@ -40,11 +40,12 @@ public class AuthUseCase {
 
 
 
-    @Transactional
     public String registerAndGenerateToken(AuthDto authDto) {
 
         User usuario = new User();
         usuario.setNome(authDto.nome());
+        usuario.setEmail(authDto.email());
+        usuario.setDataNascimento(authDto.dataNascimento());
         usuario.setSenha(passwordBcrypt.hashPassword(authDto.senha()));
         userRepository.save(usuario);
 

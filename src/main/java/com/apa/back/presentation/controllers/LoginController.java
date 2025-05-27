@@ -22,8 +22,8 @@ public class LoginController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody AuthDto authDto) {
-        authUseCase.registerAndGenerateToken(authDto);
-        return ResponseEntity.status(201).body("Usuário cadastrado com sucesso!");
+        var token = authUseCase.registerAndGenerateToken(authDto);
+        return ResponseEntity.status(201).body(token);
     }
 
     @PostMapping("/login")
