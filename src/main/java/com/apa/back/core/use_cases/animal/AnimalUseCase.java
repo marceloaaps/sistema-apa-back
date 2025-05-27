@@ -3,6 +3,8 @@ package com.apa.back.core.use_cases.animal;
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.repositories.AnimalRepository;
 import com.apa.back.presentation.dtos.AnimalDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -56,7 +58,7 @@ public class AnimalUseCase {
         return animalRepository.save(animal);
     }
 
-    public boolean deleteAnimal(Long id, Integer deletadoPor) {
+    public boolean deleteAnimal(Long id) {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
@@ -66,7 +68,6 @@ public class AnimalUseCase {
         Animal animal = existingAnimal.get();
         animal.setDisponivelParaAdocao(false);
         animal.setDeletadoEm(LocalDate.now());
-        animal.setDeletadoPor(deletadoPor);
 
         animalRepository.save(animal);
         return true;
@@ -108,9 +109,8 @@ public class AnimalUseCase {
         );
     }
 
-    public List<AnimalDTO> getAnimaisDisponiveis() {
-        List<Animal> animalDisponiveis = animalRepository.findAllByDisponivelParaAdocaoTrue();
-        return animalDisponiveis.stream()
+    public Page<AnimalDTO> getAnimaisDisponiveis(Pageable pageable) {
+        return animalRepository.findAllByDisponivelParaAdocaoTrue(pageable)
                 .map(animal -> new AnimalDTO(
                         animal.getId(),
                         animal.getNome(),
@@ -121,7 +121,8 @@ public class AnimalUseCase {
                         animal.getHistorico(),
                         animal.getDataCadastro(),
                         animal.isDisponivelParaAdocao()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
+
+
 }

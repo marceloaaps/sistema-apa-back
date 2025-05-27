@@ -38,8 +38,8 @@ public class AnimalController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAnimal(@PathVariable Long id, @AuthenticationPrincipal UsuarioLogado usuario) {
-        boolean deleted = animalUseCase.deleteAnimal(id, usuario.getId());
+    public ResponseEntity<Void> deleteAnimal(@PathVariable Long id) {
+        boolean deleted = animalUseCase.deleteAnimal(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 

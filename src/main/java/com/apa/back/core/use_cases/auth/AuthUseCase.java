@@ -3,6 +3,7 @@ package com.apa.back.core.use_cases.auth;
 import com.apa.back.core.domain.entities.User;
 import com.apa.back.core.domain.repositories.UserRepository;
 import com.apa.back.infra.security.service.PasswordBcrypt;
+import com.apa.back.infra.security.service.TokenCache;
 import com.apa.back.presentation.dtos.AuthDto;
 import com.apa.back.presentation.dtos.LoginRequest;
 import com.apa.back.presentation.dtos.LoginResponse;
@@ -23,33 +24,44 @@ public class AuthUseCase {
     private final UserRepository userRepository;
     private final JwtEncoder jwtEncoder;
     private LoginResponse loginResponse;
+    private final TokenCache tokenCache;
+    private final PasswordBcrypt passwordEncoder;
 
 
     private final Long expirationTime = 3600L;
 
-    public AuthUseCase(PasswordBcrypt passwordBcrypt, UserRepository userRepository, JwtEncoder jwtEncoder) {
+    public AuthUseCase(PasswordBcrypt passwordBcrypt, UserRepository userRepository, JwtEncoder jwtEncoder, TokenCache tokenCache, PasswordBcrypt passwordEncoder) {
         this.passwordBcrypt = passwordBcrypt;
         this.userRepository = userRepository;
         this.jwtEncoder = jwtEncoder;
+        this.tokenCache = tokenCache;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
 
     @Transactional
-    public void register(AuthDto authDto) {
-        if (userRepository.verifyEmail(authDto.email())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado.");
-        }
+    public String registerAndGenerateToken(AuthDto authDto) {
 
-        var password = passwordBcrypt.hashPassword(authDto.senha());
+        User usuario = new User();
+        usuario.setNome(authDto.nome());
+        usuario.setSenha(passwordBcrypt.hashPassword(authDto.senha()));
+        userRepository.save(usuario);
 
-        User user = new User();
-        user.setNome(authDto.nome());
-        user.setEmail(authDto.email());
-        user.setSenha(password);
-        user.setDataNascimento(authDto.dataNascimento());
+        Instant now = Instant.now();
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("apa-api")
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(3600))
+                .subject(usuario.getNome())
+                .claim("scope", "USER")
+                .build();
 
-        userRepository.save(user);
+        String token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+        tokenCache.storeToken(usuario.getNome(), token);
+
+        return token;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
@@ -73,9 +85,5 @@ public class AuthUseCase {
 
         return new LoginResponse(jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(), expirationTime);
     }
-
-
-
-
 
 }

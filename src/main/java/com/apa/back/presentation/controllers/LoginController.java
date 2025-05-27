@@ -22,7 +22,7 @@ public class LoginController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody AuthDto authDto) {
-        authUseCase.register(authDto);
+        authUseCase.registerAndGenerateToken(authDto);
         return ResponseEntity.status(201).body("Usuário cadastrado com sucesso!");
     }
 

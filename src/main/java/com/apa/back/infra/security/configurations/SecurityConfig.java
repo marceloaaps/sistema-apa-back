@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .anyRequest().permitAll() // Permite qualquer outra requisição
                 )
-                .csrf(csrf -> csrf.disable()) // Desabilita a proteção contra CSRF
+                .csrf(csrf -> csrf.disable())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())) // Mantém a configuração de JWT
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Mantém a política de sessão sem estado
 
