@@ -1,6 +1,7 @@
 package com.apa.back.core.use_cases.auth;
 
 import com.apa.back.core.domain.entities.User;
+import com.apa.back.core.domain.enums.UserRole;
 import com.apa.back.core.domain.repositories.UserRepository;
 import com.apa.back.infra.security.service.PasswordBcrypt;
 import com.apa.back.infra.security.service.TokenCache;
@@ -47,6 +48,7 @@ public class AuthUseCase {
         usuario.setEmail(authDto.email());
         usuario.setDataNascimento(authDto.dataNascimento());
         usuario.setSenha(passwordBcrypt.hashPassword(authDto.senha()));
+        usuario.setRole(UserRole.guest);
         userRepository.save(usuario);
 
         Instant now = Instant.now();
@@ -54,9 +56,12 @@ public class AuthUseCase {
                 .issuer("apa-api")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(3600))
-                .subject(usuario.getNome())
+                .subject(usuario.getId().toString())
+                .claim("nome", usuario.getNome())
+                .claim("role", usuario.getRole().toString())
                 .claim("scope", "USER")
                 .build();
+
 
         String token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 

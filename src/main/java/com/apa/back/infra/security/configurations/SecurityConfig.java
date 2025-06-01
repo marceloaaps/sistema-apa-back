@@ -1,5 +1,7 @@
 package com.apa.back.infra.security.configurations;
 
+import com.apa.back.infra.security.filters.TokenValidationFilter;
+import com.apa.back.infra.security.service.TokenCache;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -17,10 +19,10 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -31,28 +33,28 @@ public class SecurityConfig {
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
 
-    private static final String ADMIN = "guest";
+    private static final String ADMIN = "admin";
     private static final String USER = "user";
-    private static final String GUEST = "admin";
+    private static final String GUEST = "guest";
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenValidationFilter tokenValidationFilter) throws Exception {
+        http.addFilterBefore(tokenValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-
-                        // Permitir todas as requisições sem autenticação
-                        .requestMatchers("/**").permitAll()
-
+                        .requestMatchers("/login", "/register").permitAll()
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .anyRequest().permitAll() // Permite qualquer outra requisição
+                        .anyRequest().permitAll()
                 )
                 .csrf(csrf -> csrf.disable())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())) // Mantém a configuração de JWT
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Mantém a política de sessão sem estado
-
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 
+    @Bean
+    public TokenValidationFilter tokenValidationFilter(TokenCache tokenCache, JwtDecoder jwtDecoder) {
+        return new TokenValidationFilter(tokenCache, jwtDecoder);
+    }
 
     @Bean
     public JwtEncoder jwtEncoder(){
@@ -64,8 +66,5 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder(){
         return NimbusJwtDecoder.withPublicKey(publicKey).build();
-
     }
-
 }
-

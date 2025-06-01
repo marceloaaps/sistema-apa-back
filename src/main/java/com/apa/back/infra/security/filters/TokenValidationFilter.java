@@ -5,18 +5,21 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
 public class TokenValidationFilter extends OncePerRequestFilter {
 
     private final TokenCache tokenCache;
 
-    public TokenValidationFilter(TokenCache tokenCache) {
+    private final JwtDecoder jwtDecoder;
+
+
+    public TokenValidationFilter(TokenCache tokenCache, JwtDecoder jwtDecoder) {
         this.tokenCache = tokenCache;
+        this.jwtDecoder = jwtDecoder;
     }
 
     @Override
@@ -40,7 +43,8 @@ public class TokenValidationFilter extends OncePerRequestFilter {
     }
 
     private String extractUsernameFromToken(String token) {
-        // Pode usar JwtDecoder aqui
-        return ""; // lógica aqui
+        return jwtDecoder.decode(token).getSubject();
     }
+
+
 }
