@@ -29,15 +29,25 @@ public class TokenValidationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+
+            // AO INVES DO NOME, TA PUXANDO ID???
             String username = extractUsernameFromToken(token);
 
+            System.out.println("NOME: " + username);
+
+
+
             if (!tokenCache.isTokenValid(username, token)) {
+                System.out.println("INVALIDOOOOOOOOOOOOOOO " + token);
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
         }
+
+
 
         filterChain.doFilter(request, response);
     }
@@ -45,6 +55,4 @@ public class TokenValidationFilter extends OncePerRequestFilter {
     private String extractUsernameFromToken(String token) {
         return jwtDecoder.decode(token).getSubject();
     }
-
-
 }

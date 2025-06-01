@@ -8,7 +8,6 @@ import com.apa.back.infra.security.service.TokenCache;
 import com.apa.back.presentation.dtos.AuthDto;
 import com.apa.back.presentation.dtos.LoginRequest;
 import com.apa.back.presentation.dtos.LoginResponse;
-import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -48,7 +47,7 @@ public class AuthUseCase {
         usuario.setEmail(authDto.email());
         usuario.setDataNascimento(authDto.dataNascimento());
         usuario.setSenha(passwordBcrypt.hashPassword(authDto.senha()));
-        usuario.setRole(UserRole.guest);
+        usuario.setRole(UserRole.user);
         userRepository.save(usuario);
 
         Instant now = Instant.now();
@@ -57,21 +56,19 @@ public class AuthUseCase {
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(3600))
                 .subject(usuario.getId().toString())
-                .claim("nome", usuario.getNome())
-                .claim("role", usuario.getRole().toString())
-                .claim("scope", "USER")
+                .claim("scope", usuario.getId().toString())
                 .build();
 
 
         String token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        tokenCache.storeToken(usuario.getNome(), token);
+        tokenCache.storeToken(usuario.getId().toString(), token);
+
 
         return token;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-
         var now = Instant.now();
 
         var user = userRepository.findByEmail(loginRequest.email());
@@ -80,16 +77,20 @@ public class AuthUseCase {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Credencial inválida.");
         }
 
-        var claims = JwtClaimsSet.builder().issuer("mybackend").subject(user
-                .get()
-                .getId()
-                .toString())
+        var claims = JwtClaimsSet.builder()
+                .issuer("apa-api")
+                .subject(user.get().getId().toString())
                 .issuedAt(now)
-                .expiresAt(
-                        now.plusSeconds(expirationTime))
+                .expiresAt(now.plusSeconds(expirationTime))
+                .claim("scope", user.get().getRole().toString())
                 .build();
 
-        return new LoginResponse(jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(), expirationTime);
+        String token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+        tokenCache.storeToken(user.get().getId().toString(), token);
+
+        return new LoginResponse(token, expirationTime);
     }
+
 
 }

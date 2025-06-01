@@ -1,5 +1,6 @@
 package com.apa.back.infra.security.configurations;
 
+import com.apa.back.core.domain.enums.UserRole;
 import com.apa.back.infra.security.filters.TokenValidationFilter;
 import com.apa.back.infra.security.service.TokenCache;
 import com.nimbusds.jose.jwk.JWK;
@@ -18,6 +19,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -33,22 +35,29 @@ public class SecurityConfig {
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
 
-    private static final String ADMIN = "admin";
-    private static final String USER = "user";
-    private static final String GUEST = "guest";
+    private static final String ADMIN = UserRole.admin.toString();
+    private static final String USER = UserRole.user.toString();
+    private static final String GUEST = UserRole.guest.toString();
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenValidationFilter tokenValidationFilter) throws Exception {
         http.addFilterBefore(tokenValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register").permitAll()
-                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
+                        .requestMatchers("/animals/*").hasAnyRole(USER, GUEST)
                         .anyRequest().permitAll()
                 )
                 .csrf(csrf -> csrf.disable())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                );
         return http.build();
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        return new CustomJwtAuthenticationConverter();
     }
 
     @Bean
