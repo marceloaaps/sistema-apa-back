@@ -1,4 +1,4 @@
-package com.apa.back.presentation.controllers;
+package com.apa.back.presentation.controllers.v1;
 
 import com.apa.back.core.use_cases.auth.AuthUseCase;
 import com.apa.back.presentation.dtos.AuthDto;
@@ -22,8 +22,8 @@ public class LoginController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody AuthDto authDto) {
-        var token = authUseCase.registerAndGenerateToken(authDto);
-        return ResponseEntity.status(201).body(token);
+        authUseCase.registerAndGenerateToken(authDto);
+        return ResponseEntity.status(201).body("Usuário criado com sucesso.");
     }
 
     @PostMapping("/login")

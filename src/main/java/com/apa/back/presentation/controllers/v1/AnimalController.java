@@ -1,4 +1,4 @@
-package com.apa.back.presentation.controllers;
+package com.apa.back.presentation.controllers.v1;
 
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.use_cases.animal.AnimalUseCase;
@@ -11,10 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/animals")
+@RequestMapping("/animals/v1")
 public class AnimalController {
 
     private final AnimalUseCase animalUseCase;
@@ -23,7 +21,7 @@ public class AnimalController {
         this.animalUseCase = animalUseCase;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Animal> createAnimal(@RequestBody AnimalDTO animalDTO) {
         Animal savedAnimal = animalUseCase.createAnimal(animalDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAnimal);
@@ -37,7 +35,7 @@ public class AnimalController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<Void> deleteAnimal(@PathVariable Long id) {
         boolean deleted = animalUseCase.deleteAnimal(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();

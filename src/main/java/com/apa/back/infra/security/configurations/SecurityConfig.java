@@ -11,6 +11,7 @@ import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,17 +36,26 @@ public class SecurityConfig {
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
 
-    private static final String ADMIN = UserRole.admin.toString();
-    private static final String USER = UserRole.user.toString();
-    private static final String GUEST = UserRole.guest.toString();
+    private static final String ADMIN = "ADMIN";
+    private static final String USER = "USER";
+    private static final String GUEST = "GUEST";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenValidationFilter tokenValidationFilter) throws Exception {
         http.addFilterBefore(tokenValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register").permitAll()
-                        .requestMatchers("/animals/60").hasAnyRole(USER, GUEST)
-                        .anyRequest().permitAll()
+                        .requestMatchers("/auth/v1/login", "/auth/v1/register").permitAll()
+
+                        // Endpoints públicos ou mistos
+                        .requestMatchers(HttpMethod.GET, "/animals/v1/**").hasAnyRole(ADMIN, USER)
+
+                        // Ações restritas
+                        .requestMatchers(HttpMethod.POST, "/animals/v1/create").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/animals/v1/**").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, "/animals/v1/**/delete").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.PATCH, "/animals/v1/**/restore").hasRole(ADMIN)
+
+                        .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -54,6 +64,7 @@ public class SecurityConfig {
                 );
         return http.build();
     }
+
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {

@@ -23,7 +23,6 @@ public class CustomJwtAuthenticationConverter extends JwtAuthenticationConverter
             if (scope == null) {
                 return Collections.emptyList();
             }
-            System.out.println(scope + "SCOPE");
             return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + scope.toUpperCase()));
         }
     }
