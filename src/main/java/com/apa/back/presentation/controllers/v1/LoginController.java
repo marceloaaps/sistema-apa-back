@@ -14,7 +14,6 @@ public class LoginController {
 
     private final AuthUseCase authUseCase;
 
-
     public LoginController(AuthUseCase authUseCase) {
         this.authUseCase = authUseCase;
     }
