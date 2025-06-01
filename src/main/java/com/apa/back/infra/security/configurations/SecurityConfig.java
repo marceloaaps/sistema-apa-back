@@ -44,7 +44,7 @@ public class SecurityConfig {
         http.addFilterBefore(tokenValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register").permitAll()
-                        .requestMatchers("/animals/*").hasAnyRole(USER, GUEST)
+                        .requestMatchers("/animals/60").hasAnyRole(USER, GUEST)
                         .anyRequest().permitAll()
                 )
                 .csrf(csrf -> csrf.disable())
