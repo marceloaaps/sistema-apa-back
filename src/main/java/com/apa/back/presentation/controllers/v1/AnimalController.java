@@ -60,7 +60,7 @@ public class AnimalController {
 
     @GetMapping
     public ResponseEntity<PaginacaoDto<AnimalDto>> getAnimaisDisponiveis(
-            @PageableDefault(size = 20) Pageable pageable) {
+            @PageableDefault(size = 1000) Pageable pageable) {
         Page<AnimalDto> page = animalUseCase.getAnimaisDisponiveis(pageable);
         return ResponseEntity.ok(new PaginacaoDto<>(
                 page.getContent(),
