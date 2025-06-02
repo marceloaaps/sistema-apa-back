@@ -1,11 +1,45 @@
 package com.apa.back.core.use_cases.auth;
 
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.stereotype.Service;
+import java.util.Properties;
 
 @Service
 public class EmailUseCase {
+
     public void sendEmail(String to, String subject, String body) {
-        // Integração com SMTP real ou apenas log para debug
-        System.out.printf("Enviar email para: %s\nAssunto: %s\nCorpo: %s\n", to, subject, body);
+        final String from = "no-reply@apa.com"; // remetente fictício
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "localhost");
+        props.put("mail.smtp.port", "1025");
+        props.put("mail.smtp.auth", "false");
+        props.put("mail.smtp.starttls.enable", "false");
+
+        Session session = Session.getInstance(props);
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(to)
+            );
+            message.setSubject(subject);
+            message.setText(body);
+
+            Transport.send(message);
+
+            System.out.println("Email enviado com sucesso para " + to);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Falha ao enviar e-mail: " + e.getMessage());
+        }
     }
 }

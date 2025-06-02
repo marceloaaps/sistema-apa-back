@@ -35,15 +35,15 @@ public class LoginController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequestDto request) {
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequestDto request) {
         resetUseCase.sendResetToken(request.email());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(200).body("Token enviado para o email informado.");
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequestDto request) {
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDto request) {
         resetUseCase.resetPassword(request.token(), request.newPassword());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(200).body("Senha redefinida com sucesso.");
     }
 
 }
