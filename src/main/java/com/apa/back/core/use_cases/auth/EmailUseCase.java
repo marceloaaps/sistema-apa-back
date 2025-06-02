@@ -37,6 +37,7 @@ public class EmailUseCase {
 
             System.out.println("Email enviado com sucesso para " + to);
 
+
         } catch (MessagingException e) {
             e.printStackTrace();
             throw new RuntimeException("Falha ao enviar e-mail: " + e.getMessage());

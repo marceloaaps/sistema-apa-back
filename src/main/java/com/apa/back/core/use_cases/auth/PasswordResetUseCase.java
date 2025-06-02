@@ -43,6 +43,8 @@ public class PasswordResetUseCase {
 
         String link = "http://localhost:5173/reset-password?token=" + token;
 
+        System.out.println(link);
+
         emailUseCase.sendEmail(user.getEmail(), "Redefinição de senha",
                 "Clique no link para redefinir sua senha: " + link);
     }
