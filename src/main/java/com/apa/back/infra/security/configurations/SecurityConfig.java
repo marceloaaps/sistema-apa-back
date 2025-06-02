@@ -52,6 +52,7 @@ public class SecurityConfig {
 
                         // Endpoints mistos
                         .requestMatchers(HttpMethod.GET, "/animals/v1/**").hasAnyRole(ADMIN, USER)
+                        .requestMatchers(HttpMethod.GET, "/usuarios/v1/**").hasAnyRole(ADMIN, USER)
 
                         // Ações restritas
                         .requestMatchers(HttpMethod.POST, "/animals/v1/create").hasRole(ADMIN)
