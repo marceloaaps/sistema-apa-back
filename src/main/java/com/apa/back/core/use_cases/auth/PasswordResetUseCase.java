@@ -61,7 +61,8 @@ public class PasswordResetUseCase {
 
         userRepository.updateSenhaByUserId(user.getId(), senhaNova);
 
-        tokenRepository.delete(resetToken);
+        tokenRepository.updateUsedByResetId(resetToken.getId());
     }
+
 
 }

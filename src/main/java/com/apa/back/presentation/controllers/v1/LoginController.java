@@ -27,21 +27,21 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        var response = authUseCase.login(loginRequest);
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        var response = authUseCase.login(loginRequestDto);
 
         return ResponseEntity.status(200).body(response);
 
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+    public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequestDto request) {
         resetUseCase.sendResetToken(request.email());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequestDto request) {
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAA" + request.newPassword());
         resetUseCase.resetPassword(request.token(), request.newPassword());
         return ResponseEntity.ok().build();

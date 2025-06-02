@@ -6,8 +6,8 @@ import com.apa.back.core.domain.repositories.UserRepository;
 import com.apa.back.infra.security.service.PasswordBcrypt;
 import com.apa.back.infra.security.service.TokenCache;
 import com.apa.back.presentation.dtos.AuthDto;
-import com.apa.back.presentation.dtos.LoginRequest;
-import com.apa.back.presentation.dtos.LoginResponse;
+import com.apa.back.presentation.dtos.LoginRequestDto;
+import com.apa.back.presentation.dtos.LoginResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -23,7 +23,7 @@ public class AuthUseCase {
     private final PasswordBcrypt passwordBcrypt;
     private final UserRepository userRepository;
     private final JwtEncoder jwtEncoder;
-    private LoginResponse loginResponse;
+    private LoginResponseDto loginResponseDto;
     private final TokenCache tokenCache;
     private final PasswordBcrypt passwordEncoder;
 
@@ -68,12 +68,12 @@ public class AuthUseCase {
         return token;
     }
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         var now = Instant.now();
 
-        var user = userRepository.findByEmail(loginRequest.email());
+        var user = userRepository.findByEmail(loginRequestDto.email());
 
-        if (user.isEmpty() || !passwordBcrypt.verifyPassword(loginRequest.senha(), user.get().getSenha())){
+        if (user.isEmpty() || !passwordBcrypt.verifyPassword(loginRequestDto.senha(), user.get().getSenha())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Credencial inválida.");
         }
 
@@ -89,7 +89,7 @@ public class AuthUseCase {
 
         tokenCache.storeToken(user.get().getId().toString(), token);
 
-        return new LoginResponse(token, expirationTime);
+        return new LoginResponseDto(token, expirationTime);
     }
 
 

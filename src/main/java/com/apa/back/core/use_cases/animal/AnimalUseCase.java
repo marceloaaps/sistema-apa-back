@@ -2,7 +2,7 @@ package com.apa.back.core.use_cases.animal;
 
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.repositories.AnimalRepository;
-import com.apa.back.presentation.dtos.AnimalDTO;
+import com.apa.back.presentation.dtos.AnimalDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AnimalUseCase {
@@ -23,7 +21,7 @@ public class AnimalUseCase {
         this.animalRepository = animalRepository;
     }
 
-    public Animal createAnimal(AnimalDTO animalDTO) {
+    public Animal createAnimal(AnimalDto animalDTO) {
         Animal animal = new Animal(
                 null,
                 animalDTO.getNome(),
@@ -38,7 +36,7 @@ public class AnimalUseCase {
         return animalRepository.save(animal);
     }
 
-    public Animal updateAnimal(Long id, AnimalDTO animalDTO) {
+    public Animal updateAnimal(Long id, AnimalDto animalDTO) {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
@@ -88,7 +86,7 @@ public class AnimalUseCase {
         return animalRepository.save(animal);
     }
 
-    public AnimalDTO getAnimalById(Long id) {
+    public AnimalDto getAnimalById(Long id) {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
@@ -96,7 +94,7 @@ public class AnimalUseCase {
         }
 
         Animal animal = existingAnimal.get();
-        return new AnimalDTO(
+        return new AnimalDto(
                 animal.getId(),
                 animal.getNome(),
                 animal.getIdade(),
@@ -109,9 +107,9 @@ public class AnimalUseCase {
         );
     }
 
-    public Page<AnimalDTO> getAnimaisDisponiveis(Pageable pageable) {
+    public Page<AnimalDto> getAnimaisDisponiveis(Pageable pageable) {
         return animalRepository.findAllByDisponivelParaAdocaoTrue(pageable)
-                .map(animal -> new AnimalDTO(
+                .map(animal -> new AnimalDto(
                         animal.getId(),
                         animal.getNome(),
                         animal.getIdade(),

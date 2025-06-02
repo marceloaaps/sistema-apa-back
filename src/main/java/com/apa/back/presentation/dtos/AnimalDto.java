@@ -4,7 +4,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class AnimalDTO {
+public class AnimalDto {
 
     private Long id;
     private String nome;
@@ -16,8 +16,8 @@ public class AnimalDTO {
     private LocalDate dataCadastro;
     private Boolean disponivelParaAdocao;
 
-    public AnimalDTO(Long id, String nome, Integer idade, String raca, Long idSaude,
-                      String comportamento, String historico, LocalDate dataCadastro, Boolean disponivelParaAdocao) {
+    public AnimalDto(Long id, String nome, Integer idade, String raca, Long idSaude,
+                     String comportamento, String historico, LocalDate dataCadastro, Boolean disponivelParaAdocao) {
         this.id = id;
         this.nome = nome;
         this.idade = idade;
