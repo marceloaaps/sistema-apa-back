@@ -22,37 +22,40 @@ public class TokenValidationFilter extends OncePerRequestFilter {
         this.jwtDecoder = jwtDecoder;
     }
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        String path = request.getRequestURI();
 
+        if (isSwaggerOrPublicPath(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            String username;
-            try {
-                username = extractUsernameFromToken(token);
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
+            String username = extractUsernameFromToken(token);
 
             if (!tokenCache.isTokenValid(username, token)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
-        } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
         }
+
+
 
         filterChain.doFilter(request, response);
     }
 
+    private boolean isSwaggerOrPublicPath(String path) {
+        return path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-ui")
+                || path.equals("/swagger-ui.html");
+    }
 
     private String extractUsernameFromToken(String token) {
         return jwtDecoder.decode(token).getSubject();
