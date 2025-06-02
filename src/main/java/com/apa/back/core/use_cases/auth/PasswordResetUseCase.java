@@ -36,7 +36,8 @@ public class PasswordResetUseCase {
         PasswordResetToken resetToken = new PasswordResetToken();
         resetToken.setToken(token);
         resetToken.setUser(user);
-        resetToken.setExpirationDate(Instant.now().plus(Duration.ofHours(1)));
+        resetToken.setExpiresAt(Instant.now().plus(Duration.ofHours(1)));
+        resetToken.setCreatedAt(Instant.now());
 
         tokenRepository.save(resetToken);
 
@@ -50,7 +51,7 @@ public class PasswordResetUseCase {
         PasswordResetToken resetToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("Token inválido"));
 
-        if (resetToken.getExpirationDate().isBefore(Instant.now())) {
+        if (resetToken.getExpiresAt().isBefore(Instant.now())) {
             throw new IllegalArgumentException("Token expirado");
         }
 
@@ -58,6 +59,6 @@ public class PasswordResetUseCase {
         user.setSenha(new BCryptPasswordEncoder().encode(newPassword));
         userRepository.save(user);
 
-        tokenRepository.delete(resetToken); // invalidar token
+        tokenRepository.delete(resetToken);
     }
 }

@@ -5,36 +5,28 @@ import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity
+@Table(name = "password_reset_tokens")
 public class PasswordResetToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String token;
-
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id_usuario")
     private User user;
 
-    private Instant expirationDate;
+    @Column(nullable = false, unique = true)
+    private String token;
 
-    public String getToken() {
-        return token;
-    }
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
 
-    public PasswordResetToken setToken(String token) {
-        this.token = token;
-        return this;
-    }
+    @Column(name = "expires_at", nullable = false)
+    private Instant expiresAt;
 
-    public Instant getExpirationDate() {
-        return expirationDate;
-    }
-
-    public PasswordResetToken setExpirationDate(Instant expirationDate) {
-        this.expirationDate = expirationDate;
-        return this;
-    }
+    @Column(nullable = false)
+    private boolean used = false;
 
     public Long getId() {
         return id;
@@ -51,6 +43,42 @@ public class PasswordResetToken {
 
     public PasswordResetToken setUser(User user) {
         this.user = user;
+        return this;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public PasswordResetToken setToken(String token) {
+        this.token = token;
+        return this;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public PasswordResetToken setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+        return this;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public PasswordResetToken setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
+        return this;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public PasswordResetToken setUsed(boolean used) {
+        this.used = used;
         return this;
     }
 }
