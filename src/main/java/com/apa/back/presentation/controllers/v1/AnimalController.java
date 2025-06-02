@@ -35,7 +35,7 @@ public class AnimalController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAnimal(@PathVariable Long id) {
         boolean deleted = animalUseCase.deleteAnimal(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
