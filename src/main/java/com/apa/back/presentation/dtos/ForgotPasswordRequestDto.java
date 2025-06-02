@@ -1,3 +1,5 @@
 package com.apa.back.presentation.dtos;
 
-public record ForgotPasswordRequestDto(String email) {}
+import jakarta.validation.constraints.NotNull;
+
+public record ForgotPasswordRequestDto(@NotNull String email) {}

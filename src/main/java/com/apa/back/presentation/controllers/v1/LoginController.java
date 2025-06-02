@@ -42,7 +42,6 @@ public class LoginController {
 
     @PostMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequestDto request) {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAA" + request.newPassword());
         resetUseCase.resetPassword(request.token(), request.newPassword());
         return ResponseEntity.ok().build();
     }
