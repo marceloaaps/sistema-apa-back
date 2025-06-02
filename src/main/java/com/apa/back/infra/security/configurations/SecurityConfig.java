@@ -1,13 +1,11 @@
 package com.apa.back.infra.security.configurations;
 
-import com.apa.back.core.domain.enums.UserRole;
 import com.apa.back.infra.security.filters.TokenValidationFilter;
 import com.apa.back.infra.security.service.TokenCache;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -26,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -47,8 +47,14 @@ public class SecurityConfig {
                 .addFilterBefore(tokenValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
 
+                        .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "api-docs/**", "/actuator/**").permitAll()
+
                         // Endpoints liberados para todes
-                        .requestMatchers("/auth/v1/login", "/auth/v1/register", "/auth/v1/forgot-password", "/auth/v1/reset-password").permitAll()
+                        .requestMatchers("/auth/v1/login",
+                                "/auth/v1/register",
+                                "/auth/v1/forgot-password",
+                                "/auth/v1/reset-password").permitAll()
+
 
                         // Endpoints mistos
                         .requestMatchers(HttpMethod.GET, "/animals/v1/**").hasAnyRole(ADMIN, USER)
@@ -63,11 +69,22 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 );
         return http.build();
+    }
+
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers(
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html"
+        );
     }
 
 
@@ -82,14 +99,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtEncoder jwtEncoder(){
+    public JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(this.privateKey).build();
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(){
+    public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 }

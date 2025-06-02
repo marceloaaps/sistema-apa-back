@@ -22,6 +22,7 @@ public class TokenValidationFilter extends OncePerRequestFilter {
         this.jwtDecoder = jwtDecoder;
     }
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -29,24 +30,29 @@ public class TokenValidationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-
-            String username = extractUsernameFromToken(token);
-
-
-
+            String username;
+            try {
+                username = extractUsernameFromToken(token);
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
 
             if (!tokenCache.isTokenValid(username, token)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
-
-
 
         filterChain.doFilter(request, response);
     }
+
 
     private String extractUsernameFromToken(String token) {
         return jwtDecoder.decode(token).getSubject();
