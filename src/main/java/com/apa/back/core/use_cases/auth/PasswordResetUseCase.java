@@ -56,7 +56,14 @@ public class PasswordResetUseCase {
         }
 
         User user = resetToken.getUser();
-        user.setSenha(new BCryptPasswordEncoder().encode(newPassword));
+        var senhaNova = new BCryptPasswordEncoder().encode(newPassword);
+
+        System.out.println(" ASDIUOASDIUOADSIOJHUADSOIJADSOIJ  " + senhaNova);
+
+
+        //erro aqui
+        user.setSenha(senhaNova);
+
         userRepository.save(user);
 
         tokenRepository.delete(resetToken);

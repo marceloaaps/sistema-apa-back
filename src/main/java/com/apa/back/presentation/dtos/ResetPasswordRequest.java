@@ -1,5 +1,5 @@
 package com.apa.back.presentation.dtos;
 
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record ResetPasswordRequest(@NotNull String token, @NotNull String newPassword) {}
+public record ResetPasswordRequest(String token,  @JsonProperty(value = "new_password") String newPassword) {}

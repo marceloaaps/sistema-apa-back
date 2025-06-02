@@ -44,7 +44,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenValidationFilter tokenValidationFilter) throws Exception {
         http.addFilterBefore(tokenValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/v1/login", "/auth/v1/register", "/auth/v1/reset-password", "/auth/v1/reset-password").permitAll()
+                        .requestMatchers("/auth/v1/login", "/auth/v1/register", "/auth/v1/forgot-password", "/auth/v1/reset-password").permitAll()
 
                         // Endpoints públicos ou mistos
                         .requestMatchers(HttpMethod.GET, "/animals/v1/**").hasAnyRole(ADMIN, USER)
