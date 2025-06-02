@@ -47,7 +47,7 @@ public class AuthUseCase {
         usuario.setEmail(authDto.email());
         usuario.setDataNascimento(authDto.dataNascimento());
         usuario.setSenha(passwordBcrypt.hashPassword(authDto.senha()));
-        usuario.setRole(UserRole.user);
+        usuario.setUserRole(UserRole.user);
         userRepository.save(usuario);
 
         Instant now = Instant.now();
@@ -82,7 +82,7 @@ public class AuthUseCase {
                 .subject(user.get().getId().toString())
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expirationTime))
-                .claim("scope", user.get().getRole().toString())
+                .claim("scope", user.get().getUserRole().toString())
                 .build();
 
         String token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

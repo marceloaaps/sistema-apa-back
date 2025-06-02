@@ -34,8 +34,10 @@ public class User {
     private LocalDate dataNascimento;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_role", columnDefinition = "user_role_enum", insertable = false)
-    private UserRole role;
+    @Column(name = "user_role", columnDefinition = "user_role_enum")
+    private UserRole userRole;
+
+
 
 
 }
