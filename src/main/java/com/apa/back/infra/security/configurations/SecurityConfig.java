@@ -42,11 +42,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenValidationFilter tokenValidationFilter) throws Exception {
-        http.addFilterBefore(tokenValidationFilter, UsernamePasswordAuthenticationFilter.class)
+        http
+                .cors(Customizer.withDefaults())
+                .addFilterBefore(tokenValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+
+                        // Endpoints liberados para todes
                         .requestMatchers("/auth/v1/login", "/auth/v1/register", "/auth/v1/forgot-password", "/auth/v1/reset-password").permitAll()
 
-                        // Endpoints públicos ou mistos
+                        // Endpoints mistos
                         .requestMatchers(HttpMethod.GET, "/animals/v1/**").hasAnyRole(ADMIN, USER)
 
                         // Ações restritas
