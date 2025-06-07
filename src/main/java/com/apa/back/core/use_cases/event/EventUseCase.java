@@ -44,7 +44,6 @@ public class EventUseCase {
         event.setLocation(localizacao);
         event.setStartEventDate(dataInicio);
         event.setFinishEventDate(dataFim);
-//        event.set(voluntarios);
 
         Event savedEvent = eventRepository.save(event);
 

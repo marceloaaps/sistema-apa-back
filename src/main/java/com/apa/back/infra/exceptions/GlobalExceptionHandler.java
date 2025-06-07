@@ -21,4 +21,9 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @ExceptionHandler(UsedTokenException.class)
+    public ResponseEntity<String> handleUsedTokenException(UsedTokenException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
 }

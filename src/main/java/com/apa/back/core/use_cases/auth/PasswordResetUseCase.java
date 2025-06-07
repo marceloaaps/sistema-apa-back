@@ -4,6 +4,7 @@ import com.apa.back.core.domain.entities.PasswordResetToken;
 import com.apa.back.core.domain.entities.User;
 import com.apa.back.core.domain.repositories.PasswordResetTokenRepository;
 import com.apa.back.core.domain.repositories.UserRepository;
+import com.apa.back.infra.exceptions.UsedTokenException;
 import com.apa.back.infra.utils.EmailUseCase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +23,7 @@ public class PasswordResetUseCase {
     private final EmailUseCase emailUseCase;
 
     @Value("${hostname.url}")
-    private final String HOSTNAME_URL = "";
+    private String HOSTNAME_URL;
 
     public PasswordResetUseCase(PasswordResetTokenRepository tokenRepository, UserRepository userRepository, EmailUseCase emailUseCase) {
         this.tokenRepository = tokenRepository;
@@ -44,7 +45,7 @@ public class PasswordResetUseCase {
 
         tokenRepository.save(resetToken);
 
-        String link = "HOSTNAME_URL" + "/redefinir_senha?token=" + token;
+        String link = HOSTNAME_URL + "/redefinir-senha?token=" + token;
 
         System.out.println(link);
 
@@ -60,9 +61,14 @@ public class PasswordResetUseCase {
             throw new IllegalArgumentException("Token expirado");
         }
 
+        if (resetToken.isUsed()) {
+            throw new UsedTokenException("Esse token ja foi utilizado");
+        }
+
         User user = resetToken.getUser();
 
         var senhaNova = new BCryptPasswordEncoder().encode(newPassword);
+
 
         userRepository.updateSenhaByUserId(user.getId(), senhaNova);
 
