@@ -1,0 +1,88 @@
+package com.apa.back.core.domain.entities;
+
+import jakarta.persistence.*;
+
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Table(name = "feirinhas")
+public class Event {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_feirinha")
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private User idResponsavel;
+
+    @Column(name="data_inicio_feirinha")
+    private Date startEventDate;
+
+    @Column(name="data_fim_feirinha")
+    private Date finishEventDate;
+
+    private String location;
+    
+    @OneToMany
+    private List<User> volunteers;
+
+    public User getIdResponsavel() {
+        return idResponsavel;
+    }
+
+    public Event() {
+    }
+
+    public Event(Long id, Date finishEventDate, User idResponsavel, String location, Date startEventDate) {
+        this.id = id;
+        this.finishEventDate = finishEventDate;
+        this.idResponsavel = idResponsavel;
+        this.location = location;
+        this.startEventDate = startEventDate;
+    }
+
+    public Event setIdResponsavel(User idResponsavel) {
+        this.idResponsavel = idResponsavel;
+        return this;
+    }
+
+    public Date getFinishEventDate() {
+        return finishEventDate;
+    }
+
+    public Event setFinishEventDate(Date finishEventDate) {
+        this.finishEventDate = finishEventDate;
+        return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Event setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public Event setLocation(String location) {
+        this.location = location;
+        return this;
+    }
+
+    public Date getStartEventDate() {
+        return startEventDate;
+    }
+
+    public Event setStartEventDate(Date startEventDate) {
+        this.startEventDate = startEventDate;
+        return this;
+    }
+
+}

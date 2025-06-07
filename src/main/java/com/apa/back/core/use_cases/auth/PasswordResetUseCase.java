@@ -4,6 +4,8 @@ import com.apa.back.core.domain.entities.PasswordResetToken;
 import com.apa.back.core.domain.entities.User;
 import com.apa.back.core.domain.repositories.PasswordResetTokenRepository;
 import com.apa.back.core.domain.repositories.UserRepository;
+import com.apa.back.infra.utils.EmailUseCase;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,8 @@ public class PasswordResetUseCase {
     private final UserRepository userRepository;
     private final EmailUseCase emailUseCase;
 
-
+    @Value("${hostname.url}")
+    private final String HOSTNAME_URL = "";
 
     public PasswordResetUseCase(PasswordResetTokenRepository tokenRepository, UserRepository userRepository, EmailUseCase emailUseCase) {
         this.tokenRepository = tokenRepository;
@@ -41,7 +44,7 @@ public class PasswordResetUseCase {
 
         tokenRepository.save(resetToken);
 
-        String link = "http://localhost:5173/redefinir_senha?token=" + token;
+        String link = "HOSTNAME_URL" + "/redefinir_senha?token=" + token;
 
         System.out.println(link);
 

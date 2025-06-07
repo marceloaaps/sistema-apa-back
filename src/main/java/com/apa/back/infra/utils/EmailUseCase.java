@@ -1,4 +1,4 @@
-package com.apa.back.core.use_cases.auth;
+package com.apa.back.infra.utils;
 
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -13,7 +13,7 @@ import java.util.Properties;
 public class EmailUseCase {
 
     public void sendEmail(String to, String subject, String body) {
-        final String from = "no-reply@apa.com"; // remetente fictício
+        final String from = "no-reply@apa.com";
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "localhost");
