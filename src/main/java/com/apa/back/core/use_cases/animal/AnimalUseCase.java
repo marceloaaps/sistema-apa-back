@@ -103,7 +103,7 @@ public class AnimalUseCase {
                 animal.getComportamento(),
                 animal.getHistorico(),
                 animal.getDataCadastro(),
-                animal.isDisponivelParaAdocao()
+                animal.getDisponivelParaAdocao()
         );
     }
 
@@ -118,7 +118,7 @@ public class AnimalUseCase {
                         animal.getComportamento(),
                         animal.getHistorico(),
                         animal.getDataCadastro(),
-                        animal.isDisponivelParaAdocao()
+                        animal.getDisponivelParaAdocao()
                 ));
     }
 

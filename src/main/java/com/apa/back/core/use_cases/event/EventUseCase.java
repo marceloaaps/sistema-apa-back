@@ -4,11 +4,15 @@ import com.apa.back.core.domain.entities.*;
 import com.apa.back.core.domain.repositories.*;
 import com.apa.back.presentation.dtos.EventDto;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EventUseCase {
@@ -38,7 +42,7 @@ public class EventUseCase {
     public EventDto createEvent(EventDto requestDTO) {
 
 
-        Event event = createAndSaveEvent(requestDTO.idResponsavel(), requestDTO.localizacao(), requestDTO.dataInicio(), requestDTO.dataFim());
+        Event event = createAndSaveEvent(requestDTO.idResponsavel(), requestDTO.localizacao(), requestDTO.dataInicioFeira(), requestDTO.dataFimFeira());
         List<Long> animaisAssociados = associateAnimalsToEvent(event, requestDTO.idsAnimais());
         List<Long> voluntariosAssociados = associateVolunteersToEvent(event, requestDTO.idsVoluntarios());
         return new EventDto(event.getId(), event.getStartEventDate(), event.getFinishEventDate(), event.getLocation(), animaisAssociados, voluntariosAssociados); // Assumindo que esse DTO tem construtor a partir de Event
@@ -80,6 +84,33 @@ public class EventUseCase {
         }
         return voluntariosAssociados;
     }
+
+    public Page<EventDto> getAllEvents(Pageable pageable) {
+        Page<Event> eventPage = eventRepository.findAll(pageable);
+
+        List<EventDto> eventDtos = eventPage.stream().map(event -> {
+            List<Long> idsAnimais = eventAnimalRepository.findByFeirinha(event).stream()
+                    .map(ea -> ea.getAnimal().getId())
+                    .collect(Collectors.toList());
+
+            List<Long> idsVoluntarios = eventWorkerRepository.findByIdEvent(event).stream()
+                    .map(ew -> ew.getIdWorker().getId())
+                    .collect(Collectors.toList());
+
+            return new EventDto(
+                    event.getId(),
+                    event.getStartEventDate(),
+                    event.getFinishEventDate(),
+                    event.getLocation(),
+                    idsAnimais,
+                    idsVoluntarios
+            );
+        }).collect(Collectors.toList());
+
+
+        return new PageImpl<>(eventDtos, pageable, eventPage.getTotalElements());
+    }
+
 
 
 

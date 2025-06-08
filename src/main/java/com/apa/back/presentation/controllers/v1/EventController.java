@@ -2,17 +2,19 @@ package com.apa.back.presentation.controllers.v1;
 
 import com.apa.back.core.use_cases.event.EventUseCase;
 import com.apa.back.presentation.dtos.EventDto;
+import com.apa.back.presentation.dtos.PaginacaoDto;
 import com.apa.back.presentation.dtos.UsuarioDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/events/v1")
@@ -55,4 +57,35 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
     }
 
+    @Operation(
+            summary = "Listar eventos (feirinhas) com paginação",
+            description = "Retorna uma lista paginada de eventos (feirinhas), incluindo dados como local, datas, voluntários e animais.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Lista paginada de eventos retornada com sucesso",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = PaginacaoDto.class)
+                            )
+                    )
+            }
+    )
+    @GetMapping
+    public ResponseEntity<PaginacaoDto<EventDto>> getAllEvents(
+            @Parameter(description = "Parâmetros de paginação")
+            @PageableDefault(size = 20, sort = "startEventDate") Pageable pageable) {
+        Page<EventDto> page = eventUseCase.getAllEvents(pageable);
+        return ResponseEntity.ok(new PaginacaoDto<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages()
+        ));
+    }
+
+
 }
+
+

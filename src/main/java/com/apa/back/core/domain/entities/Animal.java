@@ -24,7 +24,7 @@ public class Animal {
     private String comportamento;
     private String historico;
     private LocalDate dataCadastro;
-    private boolean disponivelParaAdocao;
+    private Boolean disponivelParaAdocao;
 
     @Column(name = "deletado_em")
     private LocalDate deletadoEm;

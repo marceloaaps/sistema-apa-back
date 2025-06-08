@@ -1,9 +1,14 @@
 package com.apa.back.core.domain.repositories;
 
+import com.apa.back.core.domain.entities.Event;
 import com.apa.back.core.domain.entities.EventWorker;
+import com.apa.back.core.domain.entities.EventWorkerId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface EventWorkerRepository extends JpaRepository<EventWorker, EventWorker> {
+public interface EventWorkerRepository extends JpaRepository<EventWorker, EventWorkerId> {
+    List<EventWorker> findByIdEvent(Event event);
 }
