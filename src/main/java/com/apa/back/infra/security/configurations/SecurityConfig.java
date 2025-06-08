@@ -67,7 +67,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/animals/v1/**/delete").hasRole(ADMIN)
                         .requestMatchers(HttpMethod.PATCH, "/animals/v1/**/restore").hasRole(ADMIN)
 
-                        .requestMatchers(HttpMethod.POST, "/usuarios/v1/create").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/events/v1/create").hasRole(ADMIN)
 
                         .anyRequest().authenticated()
                 )
