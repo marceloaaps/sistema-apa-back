@@ -47,7 +47,7 @@ public class AuthUseCase {
         usuario.setEmail(authDto.email());
         usuario.setDataNascimento(authDto.dataNascimento());
         usuario.setSenha(passwordBcrypt.hashPassword(authDto.senha()));
-        usuario.setUserRole(UserRole.user);
+        usuario.setUserRole(UserRole.USER);
         userRepository.save(usuario);
 
         Instant now = Instant.now();

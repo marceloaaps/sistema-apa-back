@@ -60,11 +60,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/animals/v1/**").hasAnyRole(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/usuarios/v1/**").hasAnyRole(ADMIN, USER)
 
+
                         // Ações restritas
                         .requestMatchers(HttpMethod.POST, "/animals/v1/create").hasRole(ADMIN)
                         .requestMatchers(HttpMethod.PUT, "/animals/v1/**").hasRole(ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/animals/v1/**/delete").hasRole(ADMIN)
                         .requestMatchers(HttpMethod.PATCH, "/animals/v1/**/restore").hasRole(ADMIN)
+
+                        .requestMatchers(HttpMethod.POST, "/usuarios/v1/create").hasRole(ADMIN)
 
                         .anyRequest().authenticated()
                 )

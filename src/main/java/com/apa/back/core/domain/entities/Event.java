@@ -15,15 +15,16 @@ public class Event {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id_responsavel")
     private User idResponsavel;
 
-    @Column(name="data_inicio_feirinha")
+    @Column(name="data_inicio_feira")
     private Date startEventDate;
 
-    @Column(name="data_fim_feirinha")
+    @Column(name="data_fim_feira")
     private Date finishEventDate;
 
+    @Column(name="localizacao")
     private String location;
     
     @OneToMany
