@@ -19,6 +19,18 @@ public class EventWorker {
     @MapsId("workerId")
     private User idWorker;
 
+    public EventWorker() {
+    }
+
+    public EventWorker(Event idEvent, EventWorkerId id, User idWorker) {
+        this.idEvent = idEvent;
+        this.id = id;
+        this.idWorker = idWorker;
+    }
+
+
+
+
     public Event getIdEvent() {
         return idEvent;
     }

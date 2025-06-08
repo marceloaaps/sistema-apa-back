@@ -1,5 +1,7 @@
 package com.apa.back.presentation.controllers.v1;
 
+import com.apa.back.core.domain.entities.Event;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     @PostMapping
-    public void createEvent() {
+    public ResponseEntity<Event> createEvent() {
 
-
+        Event event = createEvent();
 
     }
 
