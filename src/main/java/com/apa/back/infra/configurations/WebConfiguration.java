@@ -18,15 +18,11 @@ public class WebConfiguration implements WebMvcConfigurer {
 
         String[] allowedOrigins = corsOrigin.split(",");
 
-
         registry.addMapping("/**")
                 .allowedOrigins(allowedOrigins)
                 .allowedMethods("*")
                 .allowCredentials(true);
         WebMvcConfigurer.super.addCorsMappings(registry);
     }
-
-
-
 
 }

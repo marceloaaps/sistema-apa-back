@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum UserRole {
-    USER("user"),
-    ADMIN("admin"),
-    GUEST("guest");
+    user("user"),
+    admin("admin"),
+    guest("guest");
 
     private final String value;
 
