@@ -75,11 +75,12 @@ class EventControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inputDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.dto.idFeirinha").value(1))
-                .andExpect(jsonPath("$.dto.localizacao").value("Praça Nova"))
-                .andExpect(jsonPath("$.dto.idsVoluntarios[0]").value(1))
-                .andExpect(jsonPath("$.dto.idsAnimais[1]").value(20));
+                .andExpect(jsonPath("$.idFeirinha").value(1))
+                .andExpect(jsonPath("$.localizacao").value("Praça Nova"))
+                .andExpect(jsonPath("$.idsVoluntarios[0]").value(1))
+                .andExpect(jsonPath("$.idsAnimais[1]").value(20));
     }
+
 
     @Test
     void shouldGetEventByIdSuccessfully() throws Exception {
@@ -111,11 +112,13 @@ class EventControllerTest {
                         .with(csrf())
                         .with(user("testuser").roles("USER")))
                 .andExpect(status().isAccepted())
-                .andExpect(jsonPath("$.dto.idFeirinha").value(1))
+                .andExpect(jsonPath("$.dto.idFeirinha").value(5))
                 .andExpect(jsonPath("$.dto.localizacao").value("Praça Local"))
-                .andExpect(jsonPath("$.dto.idsVoluntarios[0]").value(1))
-                .andExpect(jsonPath("$.dto.idsAnimais[1]").value(20));
+                .andExpect(jsonPath("$.dto.usuarios[0].id").value(1))
+                .andExpect(jsonPath("$.dto.animais[1].id").value(20));
     }
+
+
 
     @Test
     void shouldDeleteEventSuccessfully() throws Exception {
