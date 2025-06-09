@@ -28,9 +28,6 @@ public class EventWorker {
         this.worker = worker;
     }
 
-
-
-
     public Event getFeirinha() {
         return feirinha;
     }

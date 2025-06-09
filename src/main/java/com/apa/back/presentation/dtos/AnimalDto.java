@@ -1,10 +1,12 @@
 package com.apa.back.presentation.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 import java.time.LocalDate;
 
 @Data
+@Builder
 public class AnimalDto {
 
     @Schema(description = "ID único do animal", example = "123")
@@ -33,6 +35,8 @@ public class AnimalDto {
 
     @Schema(description = "Indica se o animal está disponível para adoção", example = "true")
     private Boolean disponivelParaAdocao;
+
+
 
     public AnimalDto(Long id, String nome, Integer idade, String raca, Long idSaude,
                      String comportamento, String historico, LocalDate dataCadastro, Boolean disponivelParaAdocao) {

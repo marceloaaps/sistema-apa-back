@@ -1,17 +1,15 @@
 package com.apa.back.presentation.controllers.v1;
 
 import com.apa.back.core.use_cases.event.EventUseCase;
+import com.apa.back.core.use_cases.event.GetEventsUseCase;
 import com.apa.back.presentation.dtos.EventDto;
 import com.apa.back.presentation.dtos.PaginacaoDto;
 import com.apa.back.presentation.dtos.ReturnEventDto;
-import com.apa.back.presentation.dtos.UsuarioDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.websocket.server.PathParam;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,9 +22,11 @@ import org.springframework.web.bind.annotation.*;
 public class EventController {
 
     private final EventUseCase eventUseCase;
+    private final GetEventsUseCase getEventsUseCase;
 
-    public EventController(EventUseCase eventUseCase) {
+    public EventController(EventUseCase eventUseCase, GetEventsUseCase getEventsUseCase) {
         this.eventUseCase = eventUseCase;
+        this.getEventsUseCase = getEventsUseCase;
     }
 
     @Operation(
@@ -78,7 +78,7 @@ public class EventController {
     public ResponseEntity<PaginacaoDto<EventDto>> getAllEvents(
             @Parameter(description = "Parâmetros de paginação")
             @PageableDefault(size = 20, sort = "startEventDate") Pageable pageable) {
-        Page<EventDto> page = eventUseCase.getAllEvents(pageable);
+        Page<EventDto> page = getEventsUseCase.getAllEvents(pageable);
         return ResponseEntity.ok(new PaginacaoDto<>(
                 page.getContent(),
                 page.getNumber(),
@@ -88,17 +88,24 @@ public class EventController {
         ));
     }
 
-    public ResponseEntity<String> deleteEvent(Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteEvent(@PathVariable Long id) {
 
         eventUseCase.deleteEvent(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Evento deletado com sucesso.");
     }
 
-    @GetMapping("/events/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ReturnEventDto> getEventById(@PathVariable Long id) {
-        ReturnEventDto eventFound = eventUseCase.getEventById(id);
+        ReturnEventDto eventFound = getEventsUseCase.getEventById(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(eventFound);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EventDto> updateEvent(@PathVariable Long id, @RequestBody EventDto eventRequestDTO) {
+        EventDto eventResponse = eventUseCase.updateEvent(id, eventRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(eventResponse);
     }
 
 

@@ -3,8 +3,7 @@ package com.apa.back.core.use_cases.event;
 import com.apa.back.core.domain.entities.*;
 import com.apa.back.core.domain.repositories.*;
 import com.apa.back.infra.exceptions.ResourceNotFoundException;
-import com.apa.back.presentation.dtos.EventDto;
-import com.apa.back.presentation.dtos.ReturnEventDto;
+import com.apa.back.presentation.dtos.*;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -44,7 +43,7 @@ public class EventUseCase {
     public EventDto createEvent(EventDto requestDTO) {
 
 
-        Event event = createAndSaveEvent(requestDTO.idResponsavel(), requestDTO.localizacao(), requestDTO.dataInicioFeira(), requestDTO.dataFimFeira());
+        Event event = createAndSaveEvent(requestDTO.idFeirinha(), requestDTO.localizacao(), requestDTO.dataInicioFeira(), requestDTO.dataFimFeira());
         List<Long> animaisAssociados = associateAnimalsToEvent(event, requestDTO.idsAnimais());
         List<Long> voluntariosAssociados = associateVolunteersToEvent(event, requestDTO.idsVoluntarios());
         return new EventDto(event.getId(), event.getStartEventDate(), event.getFinishEventDate(), event.getLocation(), animaisAssociados, voluntariosAssociados); // Assumindo que esse DTO tem construtor a partir de Event
@@ -87,52 +86,7 @@ public class EventUseCase {
         return voluntariosAssociados;
     }
 
-    public Page<EventDto> getAllEvents(Pageable pageable) {
-        Page<Event> eventPage = eventRepository.findAll(pageable);
 
-        List<EventDto> eventDtos = eventPage.stream().map(event -> {
-            List<Long> idsAnimais = eventAnimalRepository.findByFeirinha(event).stream()
-                    .map(ea -> ea.getAnimal().getId())
-                    .collect(Collectors.toList());
-
-            List<Long> idsVoluntarios = eventWorkerRepository.findByFeirinha(event).stream()
-                    .map(ew -> ew.getIdWorker().getId())
-                    .collect(Collectors.toList());
-
-            return new EventDto(
-                    event.getId(),
-                    event.getStartEventDate(),
-                    event.getFinishEventDate(),
-                    event.getLocation(),
-                    idsAnimais,
-                    idsVoluntarios
-            );
-        }).collect(Collectors.toList());
-
-
-        return new PageImpl<>(eventDtos, pageable, eventPage.getTotalElements());
-    }
-
-    public ReturnEventDto getEventById(Long id) {
-
-        Event event = eventRepository.getEventById(id);
-        if (event == null) {
-            throw new ResourceNotFoundException("Event not found with ID: " + id);
-        }
-
-        List<EventAnimal> animal = eventAnimalRepository.findByFeirinha(event);
-        List<EventWorker> voluntarios = eventWorkerRepository.findByFeirinha(event);
-
-        return new ReturnEventDto(
-                event.getId(),
-                event.getStartEventDate(),
-                event.getFinishEventDate(),
-                event.getLocation(),
-                animal,
-                voluntarios
-        );
-
-    }
 
     public void deleteEvent(Long id) {
         Event event = eventRepository.getEventById(id);
@@ -140,9 +94,29 @@ public class EventUseCase {
         eventRepository.deleteById(id);
 
         eventAnimalRepository.deleteByFeirinha_Id(event.getId());
-
         eventWorkerRepository.deleteByFeirinha_Id(event.getId());
+    }
 
+    public EventDto updateEvent(Long id, EventDto requestDTO) {
+        Event event = eventRepository.getEventById(id);
+        event.setLocation(requestDTO.localizacao());
+        event.setStartEventDate(requestDTO.dataInicioFeira());
+        event.setFinishEventDate(requestDTO.dataFimFeira());
+
+        eventRepository.save(event);
+        eventAnimalRepository.deleteByFeirinha_Id(event.getId());
+        eventWorkerRepository.deleteByFeirinha_Id(event.getId());
+        List<Long> animaisAssociados = associateAnimalsToEvent(event, requestDTO.idsAnimais());
+        List<Long> voluntariosAssociados = associateVolunteersToEvent(event, requestDTO.idsVoluntarios());
+
+        return new EventDto(
+                event.getId(),
+                event.getStartEventDate(),
+                event.getFinishEventDate(),
+                event.getLocation(),
+                animaisAssociados,
+                voluntariosAssociados
+        );
     }
 
 

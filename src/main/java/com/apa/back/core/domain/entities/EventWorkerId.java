@@ -1,13 +1,16 @@
 package com.apa.back.core.domain.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
 
 @Embeddable
 public class EventWorkerId implements Serializable {
-
+    @Column(name = "id_feirinha")
     private Long eventId;
+
+    @Column(name = "id_voluntario")
     private Long workerId;
 
     public EventWorkerId() {

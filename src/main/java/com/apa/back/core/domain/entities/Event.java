@@ -26,9 +26,6 @@ public class Event {
 
     @Column(name="localizacao")
     private String location;
-    
-    @OneToMany
-    private List<User> volunteers;
 
     public User getIdResponsavel() {
         return idResponsavel;
