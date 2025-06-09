@@ -1,8 +1,8 @@
 package com.apa.back.core.domain.repositories;
 
-import com.apa.back.core.domain.entities.Event;
-import com.apa.back.core.domain.entities.EventWorker;
-import com.apa.back.core.domain.entities.EventWorkerId;
+import com.apa.back.core.domain.entities.Event.Event;
+import com.apa.back.core.domain.entities.Event.EventWorker;
+import com.apa.back.core.domain.entities.Event.EventWorkerId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

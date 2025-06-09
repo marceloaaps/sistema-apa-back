@@ -1,4 +1,4 @@
-package com.apa.back.presentation.dtos.event;
+package com.apa.back.presentation.v1.dtos.event;
 
 import lombok.Getter;
 import lombok.Setter;

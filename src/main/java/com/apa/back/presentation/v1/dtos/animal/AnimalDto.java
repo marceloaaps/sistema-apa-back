@@ -1,4 +1,4 @@
-package com.apa.back.presentation.dtos.animal;
+package com.apa.back.presentation.v1.dtos.animal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

@@ -1,11 +1,11 @@
 package com.apa.back.infra.mappers;
 
 import com.apa.back.core.domain.entities.Animal;
-import com.apa.back.core.domain.entities.EventAnimal;
-import com.apa.back.core.domain.entities.EventWorker;
+import com.apa.back.core.domain.entities.Event.EventAnimal;
+import com.apa.back.core.domain.entities.Event.EventWorker;
 import com.apa.back.core.domain.entities.User;
-import com.apa.back.presentation.dtos.animal.AnimalDto;
-import com.apa.back.presentation.dtos.user.UsuarioWithIdDto;
+import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
+import com.apa.back.presentation.v1.dtos.user.UsuarioWithIdDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -1,13 +1,9 @@
-package com.apa.back.presentation.dtos.user;
+package com.apa.back.presentation.v1.dtos.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record UsuarioWithIdDto(
-
-        @Schema(description = "Id do usuário", example = "12")
-        Long id,
-
+public record UsuarioDto(
         @Schema(description = "Nome do usuário", example = "Marcelo Silva")
         String nome,
 
@@ -16,5 +12,5 @@ public record UsuarioWithIdDto(
 
         @JsonProperty(value = "data_nascimento")
         @Schema(description = "Data de nascimento do usuário no formato ISO", example = "1995-05-20")
-        java.time.LocalDate dataNascimento) {
-}
+        String dataNascimento
+) {}

@@ -2,8 +2,8 @@ package com.apa.back.presentation.v1.assemblers;
 
 
 import com.apa.back.presentation.v1.controllers.AnimalController;
-import com.apa.back.presentation.dtos.animal.AnimalDto;
-import com.apa.back.presentation.dtos.animal.AnimalModel;
+import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
+import com.apa.back.presentation.v1.dtos.animal.AnimalModel;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 

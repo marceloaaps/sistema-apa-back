@@ -1,4 +1,4 @@
-package com.apa.back.presentation.dtos.auth;
+package com.apa.back.presentation.v1.dtos.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;

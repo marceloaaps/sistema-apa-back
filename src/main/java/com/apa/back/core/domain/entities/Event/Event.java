@@ -1,9 +1,9 @@
-package com.apa.back.core.domain.entities;
+package com.apa.back.core.domain.entities.Event;
 
+import com.apa.back.core.domain.entities.User;
 import jakarta.persistence.*;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "feirinhas")

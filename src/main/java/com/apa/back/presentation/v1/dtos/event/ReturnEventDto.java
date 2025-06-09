@@ -1,7 +1,7 @@
-package com.apa.back.presentation.dtos.event;
+package com.apa.back.presentation.v1.dtos.event;
 
-import com.apa.back.presentation.dtos.animal.AnimalDto;
-import com.apa.back.presentation.dtos.user.UsuarioWithIdDto;
+import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
+import com.apa.back.presentation.v1.dtos.user.UsuarioWithIdDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Date;

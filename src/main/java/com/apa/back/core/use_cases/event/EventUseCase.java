@@ -1,8 +1,9 @@
 package com.apa.back.core.use_cases.event;
 
 import com.apa.back.core.domain.entities.*;
+import com.apa.back.core.domain.entities.Event.*;
 import com.apa.back.core.domain.repositories.*;
-import com.apa.back.presentation.dtos.event.EventDto;
+import com.apa.back.presentation.v1.dtos.event.EventDto;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

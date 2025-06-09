@@ -1,4 +1,4 @@
-package com.apa.back.presentation.dtos.utils;
+package com.apa.back.presentation.v1.dtos.utils;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;

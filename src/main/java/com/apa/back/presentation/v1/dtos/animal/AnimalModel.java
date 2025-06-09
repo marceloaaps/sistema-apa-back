@@ -1,4 +1,4 @@
-package com.apa.back.presentation.dtos.animal;
+package com.apa.back.presentation.v1.dtos.animal;
 
 import org.springframework.hateoas.RepresentationModel;
 

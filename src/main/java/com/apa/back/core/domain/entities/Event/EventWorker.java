@@ -1,5 +1,6 @@
-package com.apa.back.core.domain.entities;
+package com.apa.back.core.domain.entities.Event;
 
+import com.apa.back.core.domain.entities.User;
 import jakarta.persistence.*;
 
 @Entity

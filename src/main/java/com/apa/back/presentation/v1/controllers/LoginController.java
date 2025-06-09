@@ -2,7 +2,7 @@ package com.apa.back.presentation.v1.controllers;
 
 import com.apa.back.core.use_cases.auth.AuthUseCase;
 import com.apa.back.core.use_cases.auth.PasswordResetUseCase;
-import com.apa.back.presentation.dtos.auth.*;
+import com.apa.back.presentation.v1.dtos.auth.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

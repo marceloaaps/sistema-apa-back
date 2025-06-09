@@ -1,15 +1,17 @@
 package com.apa.back.core.use_cases.event;
 
-import com.apa.back.core.domain.entities.*;
+import com.apa.back.core.domain.entities.Event.Event;
+import com.apa.back.core.domain.entities.Event.EventAnimal;
+import com.apa.back.core.domain.entities.Event.EventWorker;
 import com.apa.back.core.domain.repositories.EventAnimalRepository;
 import com.apa.back.core.domain.repositories.EventRepository;
 import com.apa.back.core.domain.repositories.EventWorkerRepository;
 import com.apa.back.infra.exceptions.ResourceNotFoundException;
 import com.apa.back.infra.mappers.DtoMapper;
-import com.apa.back.presentation.dtos.animal.AnimalDto;
-import com.apa.back.presentation.dtos.event.EventDto;
-import com.apa.back.presentation.dtos.event.ReturnEventDto;
-import com.apa.back.presentation.dtos.user.UsuarioWithIdDto;
+import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
+import com.apa.back.presentation.v1.dtos.event.EventDto;
+import com.apa.back.presentation.v1.dtos.event.ReturnEventDto;
+import com.apa.back.presentation.v1.dtos.user.UsuarioWithIdDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

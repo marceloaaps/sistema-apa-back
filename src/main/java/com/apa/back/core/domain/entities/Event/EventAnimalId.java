@@ -1,4 +1,4 @@
-package com.apa.back.core.domain.entities;
+package com.apa.back.core.domain.entities.Event;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

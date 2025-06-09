@@ -1,7 +1,7 @@
 package com.apa.back.presentation.v1.assemblers;
 
-import com.apa.back.presentation.dtos.event.EventDto;
-import com.apa.back.presentation.dtos.event.EventModel;
+import com.apa.back.presentation.v1.dtos.event.EventDto;
+import com.apa.back.presentation.v1.dtos.event.EventModel;
 import com.apa.back.presentation.v1.controllers.EventController;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 

@@ -1,8 +1,8 @@
 package com.apa.back.core.domain.repositories;
 
-import com.apa.back.core.domain.entities.Event;
-import com.apa.back.core.domain.entities.EventAnimal;
-import com.apa.back.core.domain.entities.EventAnimalId;
+import com.apa.back.core.domain.entities.Event.Event;
+import com.apa.back.core.domain.entities.Event.EventAnimal;
+import com.apa.back.core.domain.entities.Event.EventAnimalId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

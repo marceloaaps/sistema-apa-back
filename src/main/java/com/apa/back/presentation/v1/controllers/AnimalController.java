@@ -1,9 +1,9 @@
 package com.apa.back.presentation.v1.controllers;
 
 import com.apa.back.core.use_cases.animal.AnimalUseCase;
-import com.apa.back.presentation.dtos.animal.AnimalDto;
-import com.apa.back.presentation.dtos.animal.AnimalModel;
-import com.apa.back.presentation.dtos.utils.PaginacaoDto;
+import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
+import com.apa.back.presentation.v1.dtos.animal.AnimalModel;
+import com.apa.back.presentation.v1.dtos.utils.PaginacaoDto;
 import com.apa.back.presentation.v1.assemblers.AnimalModelAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

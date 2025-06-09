@@ -2,11 +2,11 @@ package com.apa.back.presentation.v1.controllers;
 
 import com.apa.back.core.use_cases.event.EventUseCase;
 import com.apa.back.core.use_cases.event.GetEventsUseCase;
-import com.apa.back.presentation.dtos.event.EventDto;
-import com.apa.back.presentation.dtos.event.EventModel;
-import com.apa.back.presentation.dtos.event.ReturnEventModel;
-import com.apa.back.presentation.dtos.utils.PaginacaoDto;
-import com.apa.back.presentation.dtos.event.ReturnEventDto;
+import com.apa.back.presentation.v1.dtos.event.EventDto;
+import com.apa.back.presentation.v1.dtos.event.EventModel;
+import com.apa.back.presentation.v1.dtos.event.ReturnEventModel;
+import com.apa.back.presentation.v1.dtos.utils.PaginacaoDto;
+import com.apa.back.presentation.v1.dtos.event.ReturnEventDto;
 import com.apa.back.presentation.v1.assemblers.EventModelAssembler;
 import com.apa.back.presentation.v1.assemblers.ReturnEventModelAssembler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -91,7 +91,6 @@ public class EventController {
                     )
             }
     )
-
     @GetMapping
     public ResponseEntity<PagedModel<EventModel>> getAllEvents(
             @Parameter(description = "Parâmetros de paginação")
