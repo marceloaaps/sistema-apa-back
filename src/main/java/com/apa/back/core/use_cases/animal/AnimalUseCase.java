@@ -21,7 +21,7 @@ public class AnimalUseCase {
         this.animalRepository = animalRepository;
     }
 
-    public Animal createAnimal(AnimalDto animalDTO) {
+    public AnimalDto createAnimal(AnimalDto animalDTO) {
         Animal animal = new Animal(
                 null,
                 animalDTO.getNome(),
@@ -33,10 +33,22 @@ public class AnimalUseCase {
                 animalDTO.getDataCadastro(),
                 animalDTO.getDisponivelParaAdocao()
         );
-        return animalRepository.save(animal);
+        Animal animalRes = animalRepository.save(animal);
+
+        return new AnimalDto(
+                animalRes.getId(),
+                animalRes.getNome(),
+                animalRes.getIdade(),
+                animalRes.getRaca(),
+                animalRes.getIdSaude(),
+                animalRes.getComportamento(),
+                animalRes.getHistorico(),
+                animalRes.getDataCadastro(),
+                animalRes.getDisponivelParaAdocao()
+        );
     }
 
-    public Animal updateAnimal(Long id, AnimalDto animalDTO) {
+    public AnimalDto updateAnimal(Long id, AnimalDto animalDTO) {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
@@ -53,7 +65,19 @@ public class AnimalUseCase {
         animal.setDataCadastro(animalDTO.getDataCadastro());
         animal.setDisponivelParaAdocao(animalDTO.getDisponivelParaAdocao());
 
-        return animalRepository.save(animal);
+        animalRepository.save(animal);
+
+        return new AnimalDto(
+                animal.getId(),
+                animal.getNome(),
+                animal.getIdade(),
+                animal.getRaca(),
+                animal.getIdSaude(),
+                animal.getComportamento(),
+                animal.getHistorico(),
+                animal.getDataCadastro(),
+                animal.getDisponivelParaAdocao()
+        );
     }
 
     public boolean deleteAnimal(Long id) {
@@ -71,7 +95,7 @@ public class AnimalUseCase {
         return true;
     }
 
-    public Animal restoreAnimal(Long id) {
+    public AnimalDto restoreAnimal(Long id) {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
@@ -83,7 +107,19 @@ public class AnimalUseCase {
         animal.setDeletadoPor(null);
         animal.setDisponivelParaAdocao(true);
 
-        return animalRepository.save(animal);
+        animalRepository.save(animal);
+
+        return new AnimalDto(
+                animal.getId(),
+                animal.getNome(),
+                animal.getIdade(),
+                animal.getRaca(),
+                animal.getIdSaude(),
+                animal.getComportamento(),
+                animal.getHistorico(),
+                animal.getDataCadastro(),
+                animal.getDisponivelParaAdocao()
+        );
     }
 
     public AnimalDto getAnimalById(Long id) {

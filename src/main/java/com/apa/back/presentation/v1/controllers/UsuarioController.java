@@ -1,4 +1,4 @@
-package com.apa.back.presentation.controllers.v1;
+package com.apa.back.presentation.v1.controllers;
 
 import com.apa.back.core.use_cases.usuario.UsuarioUseCase;
 import com.apa.back.presentation.dtos.user.UsuarioDto;

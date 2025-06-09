@@ -1,10 +1,14 @@
-package com.apa.back.presentation.controllers.v1;
+package com.apa.back.presentation.v1.controllers;
 
 import com.apa.back.core.use_cases.event.EventUseCase;
 import com.apa.back.core.use_cases.event.GetEventsUseCase;
 import com.apa.back.presentation.dtos.event.EventDto;
+import com.apa.back.presentation.dtos.event.EventModel;
+import com.apa.back.presentation.dtos.event.ReturnEventModel;
 import com.apa.back.presentation.dtos.utils.PaginacaoDto;
 import com.apa.back.presentation.dtos.event.ReturnEventDto;
+import com.apa.back.presentation.v1.assemblers.EventModelAssembler;
+import com.apa.back.presentation.v1.assemblers.ReturnEventModelAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,9 +18,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Tag(name = "Eventos (Feirinhas)", description = "API para gerenciamento de eventos (feirinhas).")
 @RestController
@@ -82,20 +91,24 @@ public class EventController {
                     )
             }
     )
-    @GetMapping
-    public ResponseEntity<PaginacaoDto<EventDto>> getAllEvents(
-            @Parameter(description = "Parâmetros de paginação")
-            @PageableDefault(size = 20, sort = "startEventDate") Pageable pageable) {
-        Page<EventDto> page = getEventsUseCase.getAllEvents(pageable);
-        return ResponseEntity.ok(new PaginacaoDto<>(
-                page.getContent(),
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages()
-        ));
-    }
 
+    @GetMapping
+    public ResponseEntity<PagedModel<EventModel>> getAllEvents(
+            @Parameter(description = "Parâmetros de paginação")
+            @PageableDefault(size = 20, sort = "startEventDate") Pageable pageable,
+            PagedResourcesAssembler<EventDto> pagedResourcesAssembler) {
+
+        Page<EventDto> page = getEventsUseCase.getAllEvents(pageable);
+
+        PagedModel<EventModel> pagedModel = pagedResourcesAssembler.toModel(
+                page,
+                EventModelAssembler::toModel
+        );
+
+        pagedModel.add(linkTo(methodOn(EventController.class).createEvent(null)).withRel("create"));
+
+        return ResponseEntity.ok(pagedModel);
+    }
     @Operation(
             summary = "Deletar evento (feirinha) pelo ID",
             description = "Remove o evento identificado pelo ID.",
@@ -142,11 +155,15 @@ public class EventController {
             }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<ReturnEventDto> getEventById(
+    public ResponseEntity<ReturnEventModel> getEventById(
             @Parameter(description = "ID do evento a ser buscado", required = true)
             @PathVariable Long id) {
+
         ReturnEventDto eventFound = getEventsUseCase.getEventById(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(eventFound);
+
+        ReturnEventModel model = ReturnEventModelAssembler.toModel(eventFound);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(model);
     }
 
     @Operation(
@@ -181,12 +198,17 @@ public class EventController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<EventDto> updateEvent(
+    public ResponseEntity<EventModel> updateEvent(
             @Parameter(description = "ID do evento a ser atualizado", required = true)
             @PathVariable Long id,
             @RequestBody EventDto eventRequestDTO) {
-        EventDto eventResponse = eventUseCase.updateEvent(id, eventRequestDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(eventResponse);
+
+        EventDto updatedDto = eventUseCase.updateEvent(id, eventRequestDTO);
+
+        EventModel model = EventModelAssembler.toModel(updatedDto);
+
+        return ResponseEntity.ok(model);
     }
+
 
 }
