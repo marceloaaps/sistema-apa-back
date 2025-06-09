@@ -1,10 +1,10 @@
-package com.apa.back.presentation.dtos;
+package com.apa.back.presentation.dtos.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
-public record AuthDto(
+public record RegisterDto(
         @NotBlank
         @Schema(description = "Nome completo do usuário", example = "Marcelo Silva")
         String nome,

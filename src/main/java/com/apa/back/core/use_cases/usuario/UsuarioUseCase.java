@@ -2,7 +2,7 @@ package com.apa.back.core.use_cases.usuario;
 
 import com.apa.back.core.domain.entities.User;
 import com.apa.back.core.domain.repositories.UserRepository;
-import com.apa.back.presentation.dtos.UsuarioDto;
+import com.apa.back.presentation.dtos.user.UsuarioDto;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

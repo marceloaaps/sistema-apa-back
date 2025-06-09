@@ -2,8 +2,8 @@ package com.apa.back.presentation.controllers.v1;
 
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.use_cases.animal.AnimalUseCase;
-import com.apa.back.presentation.dtos.AnimalDto;
-import com.apa.back.presentation.dtos.PaginacaoDto;
+import com.apa.back.presentation.dtos.animal.AnimalDto;
+import com.apa.back.presentation.dtos.utils.PaginacaoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

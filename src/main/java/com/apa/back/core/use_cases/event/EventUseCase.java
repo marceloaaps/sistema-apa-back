@@ -2,18 +2,13 @@ package com.apa.back.core.use_cases.event;
 
 import com.apa.back.core.domain.entities.*;
 import com.apa.back.core.domain.repositories.*;
-import com.apa.back.infra.exceptions.ResourceNotFoundException;
-import com.apa.back.presentation.dtos.*;
+import com.apa.back.presentation.dtos.event.EventDto;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EventUseCase {

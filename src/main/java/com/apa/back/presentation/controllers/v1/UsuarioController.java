@@ -1,7 +1,7 @@
 package com.apa.back.presentation.controllers.v1;
 
 import com.apa.back.core.use_cases.usuario.UsuarioUseCase;
-import com.apa.back.presentation.dtos.UsuarioDto;
+import com.apa.back.presentation.dtos.user.UsuarioDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -2,7 +2,7 @@ package com.apa.back.presentation.controllers.v1;
 
 import com.apa.back.core.use_cases.auth.AuthUseCase;
 import com.apa.back.core.use_cases.auth.PasswordResetUseCase;
-import com.apa.back.presentation.dtos.*;
+import com.apa.back.presentation.dtos.auth.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,8 +37,8 @@ public class LoginController {
     @PostMapping("/register")
     public ResponseEntity<String> register(
             @Parameter(description = "Dados para registro do usuário", required = true)
-            @Valid @RequestBody AuthDto authDto) {
-        authUseCase.registerAndGenerateToken(authDto);
+            @Valid @RequestBody RegisterDto registerDto) {
+        authUseCase.registerAndGenerateToken(registerDto);
         return ResponseEntity.status(201).body("Usuário criado com sucesso.");
     }
 

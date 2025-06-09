@@ -2,7 +2,7 @@ package com.apa.back.core.use_cases.animal;
 
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.repositories.AnimalRepository;
-import com.apa.back.presentation.dtos.AnimalDto;
+import com.apa.back.presentation.dtos.animal.AnimalDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

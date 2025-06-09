@@ -5,9 +5,9 @@ import com.apa.back.core.domain.enums.UserRole;
 import com.apa.back.core.domain.repositories.UserRepository;
 import com.apa.back.infra.security.service.PasswordBcrypt;
 import com.apa.back.infra.security.service.TokenCache;
-import com.apa.back.presentation.dtos.AuthDto;
-import com.apa.back.presentation.dtos.LoginRequestDto;
-import com.apa.back.presentation.dtos.LoginResponseDto;
+import com.apa.back.presentation.dtos.auth.RegisterDto;
+import com.apa.back.presentation.dtos.auth.LoginRequestDto;
+import com.apa.back.presentation.dtos.auth.LoginResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -40,13 +40,13 @@ public class AuthUseCase {
 
 
 
-    public String registerAndGenerateToken(AuthDto authDto) {
+    public String registerAndGenerateToken(RegisterDto registerDto) {
 
         User usuario = new User();
-        usuario.setNome(authDto.nome());
-        usuario.setEmail(authDto.email());
-        usuario.setDataNascimento(authDto.dataNascimento());
-        usuario.setSenha(passwordBcrypt.hashPassword(authDto.senha()));
+        usuario.setNome(registerDto.nome());
+        usuario.setEmail(registerDto.email());
+        usuario.setDataNascimento(registerDto.dataNascimento());
+        usuario.setSenha(passwordBcrypt.hashPassword(registerDto.senha()));
         usuario.setUserRole(UserRole.user);
         userRepository.save(usuario);
 
