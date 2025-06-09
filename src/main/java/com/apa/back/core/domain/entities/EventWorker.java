@@ -10,33 +10,33 @@ public class EventWorker {
     private EventWorkerId id;
 
     @ManyToOne
-    @JoinColumn(name = "id_feirinha")
     @MapsId("eventId")
-    private Event idEvent;
+    @JoinColumn(name = "id_feirinha")
+    private Event feirinha;
 
     @ManyToOne
-    @JoinColumn(name = "id_voluntario")
     @MapsId("workerId")
-    private User idWorker;
+    @JoinColumn(name = "id_voluntario")
+    private User worker;
 
     public EventWorker() {
     }
 
-    public EventWorker(Event idEvent, EventWorkerId id, User idWorker) {
-        this.idEvent = idEvent;
+    public EventWorker(Event feirinha, EventWorkerId id, User worker) {
+        this.feirinha = feirinha;
         this.id = id;
-        this.idWorker = idWorker;
+        this.worker = worker;
     }
 
 
 
 
-    public Event getIdEvent() {
-        return idEvent;
+    public Event getFeirinha() {
+        return feirinha;
     }
 
-    public EventWorker setIdEvent(Event idEvent) {
-        this.idEvent = idEvent;
+    public EventWorker setFeirinha(Event feirinha) {
+        this.feirinha = feirinha;
         return this;
     }
 
@@ -50,11 +50,11 @@ public class EventWorker {
     }
 
     public User getIdWorker() {
-        return idWorker;
+        return worker;
     }
 
-    public EventWorker setIdWorker(User idWorker) {
-        this.idWorker = idWorker;
+    public EventWorker setWorker(User worker) {
+        this.worker = worker;
         return this;
     }
 }

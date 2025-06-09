@@ -2,7 +2,9 @@ package com.apa.back.core.use_cases.event;
 
 import com.apa.back.core.domain.entities.*;
 import com.apa.back.core.domain.repositories.*;
+import com.apa.back.infra.exceptions.ResourceNotFoundException;
 import com.apa.back.presentation.dtos.EventDto;
+import com.apa.back.presentation.dtos.ReturnEventDto;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -93,7 +95,7 @@ public class EventUseCase {
                     .map(ea -> ea.getAnimal().getId())
                     .collect(Collectors.toList());
 
-            List<Long> idsVoluntarios = eventWorkerRepository.findByIdEvent(event).stream()
+            List<Long> idsVoluntarios = eventWorkerRepository.findByFeirinha(event).stream()
                     .map(ew -> ew.getIdWorker().getId())
                     .collect(Collectors.toList());
 
@@ -111,7 +113,37 @@ public class EventUseCase {
         return new PageImpl<>(eventDtos, pageable, eventPage.getTotalElements());
     }
 
+    public ReturnEventDto getEventById(Long id) {
 
+        Event event = eventRepository.getEventById(id);
+        if (event == null) {
+            throw new ResourceNotFoundException("Event not found with ID: " + id);
+        }
+
+        List<EventAnimal> animal = eventAnimalRepository.findByFeirinha(event);
+        List<EventWorker> voluntarios = eventWorkerRepository.findByFeirinha(event);
+
+        return new ReturnEventDto(
+                event.getId(),
+                event.getStartEventDate(),
+                event.getFinishEventDate(),
+                event.getLocation(),
+                animal,
+                voluntarios
+        );
+
+    }
+
+    public void deleteEvent(Long id) {
+        Event event = eventRepository.getEventById(id);
+
+        eventRepository.deleteById(id);
+
+        eventAnimalRepository.deleteByFeirinha_Id(event.getId());
+
+        eventWorkerRepository.deleteByFeirinha_Id(event.getId());
+
+    }
 
 
 }

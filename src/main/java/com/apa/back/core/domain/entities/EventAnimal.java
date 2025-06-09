@@ -10,12 +10,12 @@ public class EventAnimal {
     private EventAnimalId id;
 
     @ManyToOne
-    @MapsId("eventId") // Nome do campo no ID
+    @MapsId("eventId")
     @JoinColumn(name = "id_feirinha")
     private Event feirinha;
 
     @ManyToOne
-    @MapsId("animalId") // Nome do campo no ID
+    @MapsId("animalId")
     @JoinColumn(name = "id_animal")
     private Animal animal;
 

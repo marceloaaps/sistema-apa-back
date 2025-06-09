@@ -13,4 +13,6 @@ public interface EventAnimalRepository extends JpaRepository<EventAnimal, EventA
 
     List<EventAnimal> findByFeirinha(Event feirinha);
 
+    void deleteByFeirinha_Id(Long feirinhaId);
+
 }

@@ -3,12 +3,15 @@ package com.apa.back.presentation.controllers.v1;
 import com.apa.back.core.use_cases.event.EventUseCase;
 import com.apa.back.presentation.dtos.EventDto;
 import com.apa.back.presentation.dtos.PaginacaoDto;
+import com.apa.back.presentation.dtos.ReturnEventDto;
 import com.apa.back.presentation.dtos.UsuarioDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.websocket.server.PathParam;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -83,6 +86,19 @@ public class EventController {
                 page.getTotalElements(),
                 page.getTotalPages()
         ));
+    }
+
+    public ResponseEntity<String> deleteEvent(Long id) {
+
+        eventUseCase.deleteEvent(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/events/{id}")
+    public ResponseEntity<ReturnEventDto> getEventById(@PathVariable Long id) {
+        ReturnEventDto eventFound = eventUseCase.getEventById(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(eventFound);
     }
 
 

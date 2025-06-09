@@ -10,5 +10,7 @@ import java.util.List;
 
 @Repository
 public interface EventWorkerRepository extends JpaRepository<EventWorker, EventWorkerId> {
-    List<EventWorker> findByIdEvent(Event event);
+    List<EventWorker> findByFeirinha(Event event);
+
+    void deleteByFeirinha_Id(Long id);
 }
