@@ -3,11 +3,12 @@ package com.apa.back.core.use_cases.auth;
 import com.apa.back.core.domain.entities.User;
 import com.apa.back.core.domain.enums.UserRole;
 import com.apa.back.core.domain.repositories.UserRepository;
+import com.apa.back.infra.exceptions.ConflictException;
 import com.apa.back.infra.security.service.PasswordBcrypt;
 import com.apa.back.infra.security.service.TokenCache;
 import com.apa.back.presentation.v1.dtos.auth.RegisterDto;
-import com.apa.back.presentation.v1.dtos.auth.LoginRequestDto;
-import com.apa.back.presentation.v1.dtos.auth.LoginResponseDto;
+import com.apa.back.presentation.v1.dtos.auth.login.LoginRequestDto;
+import com.apa.back.presentation.v1.dtos.auth.login.LoginResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -48,6 +49,12 @@ public class AuthUseCase {
         usuario.setDataNascimento(registerDto.dataNascimento());
         usuario.setSenha(passwordBcrypt.hashPassword(registerDto.senha()));
         usuario.setUserRole(UserRole.user);
+
+        if (userRepository.findByEmail(usuario.getEmail()).isPresent()) {
+            System.out.println("CAIU AQQQQQQQQQQQQQQQQQQQQ");
+            throw new ConflictException("Esse email já existe.");
+        }
+
         userRepository.save(usuario);
 
         Instant now = Instant.now();

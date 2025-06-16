@@ -93,6 +93,7 @@ public class EventUseCase {
         eventWorkerRepository.deleteByFeirinha_Id(event.getId());
     }
 
+    @Transactional
     public EventDto updateEvent(Long id, EventDto requestDTO) {
         Event event = eventRepository.getEventById(id);
         event.setLocation(requestDTO.localizacao());

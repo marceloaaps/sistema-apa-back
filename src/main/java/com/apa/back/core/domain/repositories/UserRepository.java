@@ -2,6 +2,7 @@ package com.apa.back.core.domain.repositories;
 
 import com.apa.back.core.domain.entities.User;
 
+import com.apa.back.core.domain.enums.UserRole;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,4 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.senha = :senha WHERE u.id = :userId")
     void updateSenhaByUserId(@Param("userId") Long userId, @Param("senha") String senha);
+    
+    @Modifying
+    @Query("update User u set u.userRole = :userRole where u.id = :id")
+    void updateUserRoleById(UserRole userRole, Long id);
 }

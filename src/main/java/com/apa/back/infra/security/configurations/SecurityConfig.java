@@ -51,7 +51,7 @@ public class SecurityConfig {
 
                         // Endpoints liberados para todes
                         .requestMatchers("/auth/v1/login",
-                                "/auth/v1/register",
+                                "/auth/v1/register", "/error",
                                 "/auth/v1/forgot-password",
                                 "/auth/v1/reset-password").permitAll()
 
