@@ -1,5 +1,6 @@
 package com.apa.back.presentation.v1.controllers;
 
+import com.apa.back.core.exceptions.DomainNotFoundException;
 import com.apa.back.core.use_cases.animal.AnimalUseCase;
 import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
 import com.apa.back.presentation.v1.dtos.animal.AnimalModel;
@@ -64,12 +65,13 @@ public class AnimalController {
             @PathVariable Long id,
             @Parameter(description = "Novos dados do animal", required = true)
             @RequestBody AnimalDto animalDTO) {
-        AnimalDto updatedAnimalDto = animalUseCase.updateAnimal(id, animalDTO);
-        if (updatedAnimalDto == null) {
+        try {
+            AnimalDto updatedAnimalDto = animalUseCase.updateAnimal(id, animalDTO);
+            AnimalModel model = AnimalModelAssembler.toModel(updatedAnimalDto);
+            return ResponseEntity.ok(model);
+        } catch (DomainNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        AnimalModel model = AnimalModelAssembler.toModel(updatedAnimalDto);
-        return ResponseEntity.ok(model);
     }
 
     @Operation(
@@ -86,8 +88,12 @@ public class AnimalController {
     public ResponseEntity<Void> deleteAnimal(
             @Parameter(description = "ID do animal a ser excluído", required = true)
             @PathVariable Long id) {
-        boolean deleted = animalUseCase.deleteAnimal(id);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        try {
+            animalUseCase.deleteAnimal(id);
+            return ResponseEntity.noContent().build();
+        } catch (DomainNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(
@@ -104,12 +110,13 @@ public class AnimalController {
     public ResponseEntity<AnimalModel> restoreAnimal(
             @Parameter(description = "ID do animal a ser restaurado", required = true)
             @PathVariable Long id) {
-        AnimalDto restoredAnimalDto = animalUseCase.restoreAnimal(id);
-        if (restoredAnimalDto == null) {
+        try {
+            AnimalDto restoredAnimalDto = animalUseCase.restoreAnimal(id);
+            AnimalModel model = AnimalModelAssembler.toModel(restoredAnimalDto);
+            return ResponseEntity.ok(model);
+        } catch (DomainNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        AnimalModel model = AnimalModelAssembler.toModel(restoredAnimalDto);
-        return ResponseEntity.ok(model);
     }
 
     @Operation(
@@ -124,12 +131,13 @@ public class AnimalController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<AnimalModel> getAnimalById(@PathVariable Long id) {
-        AnimalDto animalDTO = animalUseCase.getAnimalById(id);
-        if (animalDTO == null) {
+        try {
+            AnimalDto animalDTO = animalUseCase.getAnimalById(id);
+            AnimalModel model = AnimalModelAssembler.toModel(animalDTO);
+            return ResponseEntity.ok(model);
+        } catch (DomainNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
-        AnimalModel model = AnimalModelAssembler.toModel(animalDTO);
-        return ResponseEntity.ok(model);
     }
 
     @Operation(
@@ -151,7 +159,6 @@ public class AnimalController {
         PagedModel<AnimalModel> pagedModel = pagedResourcesAssembler.toModel(page, AnimalModelAssembler::toModel);
         return ResponseEntity.ok(pagedModel);
     }
-
 
 
 }

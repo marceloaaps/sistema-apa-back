@@ -1,5 +1,6 @@
 package com.apa.back;
 
+import com.apa.back.core.exceptions.DomainNotFoundException;
 import com.apa.back.core.use_cases.animal.AnimalUseCase;
 import com.apa.back.presentation.v1.controllers.AnimalController;
 import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
@@ -77,7 +78,8 @@ class AnimalControllerTest {
 
     @Test
     void updateAnimal_deveRetornarNotFoundQuandoAnimalNaoExistir() {
-        when(animalUseCase.updateAnimal(eq(999L), any(AnimalDto.class))).thenReturn(null);
+        // now the use case throws DomainNotFoundException when not found
+        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999")).when(animalUseCase).updateAnimal(eq(999L), any(AnimalDto.class));
 
         ResponseEntity<AnimalModel> response = animalController.updateAnimal(999L, criarAnimalDtoExemplo());
 
@@ -88,7 +90,8 @@ class AnimalControllerTest {
 
     @Test
     void deleteAnimal_deveRetornarNoContentQuandoExcluirComSucesso() {
-        when(animalUseCase.deleteAnimal(1L)).thenReturn(true);
+        // delete is void now, so mock doNothing
+        doNothing().when(animalUseCase).deleteAnimal(1L);
 
         ResponseEntity<Void> response = animalController.deleteAnimal(1L);
 
@@ -98,7 +101,7 @@ class AnimalControllerTest {
 
     @Test
     void deleteAnimal_deveRetornarNotFoundQuandoNaoExcluir() {
-        when(animalUseCase.deleteAnimal(999L)).thenReturn(false);
+        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999")).when(animalUseCase).deleteAnimal(999L);
 
         ResponseEntity<Void> response = animalController.deleteAnimal(999L);
 
@@ -120,7 +123,7 @@ class AnimalControllerTest {
 
     @Test
     void restoreAnimal_deveRetornarNotFoundQuandoNaoRestaurar() {
-        when(animalUseCase.restoreAnimal(999L)).thenReturn(null);
+        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999")).when(animalUseCase).restoreAnimal(999L);
 
         ResponseEntity<AnimalModel> response = animalController.restoreAnimal(999L);
 
@@ -143,7 +146,7 @@ class AnimalControllerTest {
 
     @Test
     void getAnimalById_deveRetornarNotFoundQuandoNaoEncontrar() {
-        when(animalUseCase.getAnimalById(999L)).thenReturn(null);
+        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999")).when(animalUseCase).getAnimalById(999L);
 
         ResponseEntity<AnimalModel> response = animalController.getAnimalById(999L);
 

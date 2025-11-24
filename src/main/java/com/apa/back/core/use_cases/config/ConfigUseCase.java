@@ -3,7 +3,6 @@ package com.apa.back.core.use_cases.config;
 import com.apa.back.core.domain.entities.User;
 import com.apa.back.core.domain.enums.UserRole;
 import com.apa.back.core.domain.repositories.UserRepository;
-import com.apa.back.infra.exceptions.ResourceNotFoundException;
 import com.apa.back.presentation.v1.dtos.user.UsuarioDto;
 import com.apa.back.presentation.v1.dtos.user.UsuarioRoleDto;
 import jakarta.persistence.EntityNotFoundException;

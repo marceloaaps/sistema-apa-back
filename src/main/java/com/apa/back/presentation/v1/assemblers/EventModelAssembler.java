@@ -10,7 +10,7 @@ public class EventModelAssembler {
     public static EventModel toModel(EventDto dto) {
         EventModel model = new EventModel(dto);
 
-        Long id = dto.idFeirinha();
+        Long id = dto.idResponsavel();
 
         model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EventController.class).getEventById(id)).withSelfRel());
         model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EventController.class).updateEvent(id, null)).withRel("update"));

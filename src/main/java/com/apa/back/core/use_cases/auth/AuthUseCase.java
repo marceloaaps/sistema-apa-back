@@ -3,18 +3,16 @@ package com.apa.back.core.use_cases.auth;
 import com.apa.back.core.domain.entities.User;
 import com.apa.back.core.domain.enums.UserRole;
 import com.apa.back.core.domain.repositories.UserRepository;
-import com.apa.back.infra.exceptions.ConflictException;
+import com.apa.back.core.exceptions.DomainConflictException;
 import com.apa.back.infra.security.service.PasswordBcrypt;
 import com.apa.back.infra.security.service.TokenCache;
 import com.apa.back.presentation.v1.dtos.auth.RegisterDto;
 import com.apa.back.presentation.v1.dtos.auth.login.LoginRequestDto;
 import com.apa.back.presentation.v1.dtos.auth.login.LoginResponseDto;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 
@@ -51,8 +49,7 @@ public class AuthUseCase {
         usuario.setUserRole(UserRole.user);
 
         if (userRepository.findByEmail(usuario.getEmail()).isPresent()) {
-            System.out.println("CAIU AQQQQQQQQQQQQQQQQQQQQ");
-            throw new ConflictException("Esse email já existe.");
+            throw new DomainConflictException("Esse email já existe.");
         }
 
         userRepository.save(usuario);
@@ -81,7 +78,7 @@ public class AuthUseCase {
         var user = userRepository.findByEmail(loginRequestDto.email());
 
         if (user.isEmpty() || !passwordBcrypt.verifyPassword(loginRequestDto.senha(), user.get().getSenha())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Credencial inválida.");
+            throw new DomainConflictException("Credencial inválida.");
         }
 
         var claims = JwtClaimsSet.builder()

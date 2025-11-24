@@ -2,12 +2,11 @@ package com.apa.back.core.use_cases.animal;
 
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.repositories.AnimalRepository;
+import com.apa.back.core.exceptions.DomainNotFoundException;
 import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -52,7 +51,7 @@ public class AnimalUseCase {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
-            return null;
+            throw new DomainNotFoundException("Animal não encontrado: ID " + id);
         }
 
         Animal animal = existingAnimal.get();
@@ -80,11 +79,11 @@ public class AnimalUseCase {
         );
     }
 
-    public boolean deleteAnimal(Long id) {
+    public void deleteAnimal(Long id) {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
-            return false;
+            throw new DomainNotFoundException("Animal não encontrado: ID " + id);
         }
 
         Animal animal = existingAnimal.get();
@@ -92,14 +91,13 @@ public class AnimalUseCase {
         animal.setDeletadoEm(LocalDate.now());
 
         animalRepository.save(animal);
-        return true;
     }
 
     public AnimalDto restoreAnimal(Long id) {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
-        if (!existingAnimal.isPresent()) {
-            return null;
+        if (existingAnimal.isEmpty()) {
+            throw new DomainNotFoundException("Animal não encontrado: ID " + id);
         }
 
         Animal animal = existingAnimal.get();
@@ -126,7 +124,7 @@ public class AnimalUseCase {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
         if (!existingAnimal.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Animal não encontrado");
+            throw new DomainNotFoundException("Animal não encontrado");
         }
 
         Animal animal = existingAnimal.get();

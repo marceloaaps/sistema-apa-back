@@ -6,7 +6,7 @@ import com.apa.back.core.domain.entities.Event.EventWorker;
 import com.apa.back.core.domain.repositories.EventAnimalRepository;
 import com.apa.back.core.domain.repositories.EventRepository;
 import com.apa.back.core.domain.repositories.EventWorkerRepository;
-import com.apa.back.infra.exceptions.ResourceNotFoundException;
+import com.apa.back.core.exceptions.DomainNotFoundException;
 import com.apa.back.infra.mappers.DtoMapper;
 import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
 import com.apa.back.presentation.v1.dtos.event.EventDto;
@@ -37,7 +37,7 @@ public class GetEventsUseCase {
     public ReturnEventDto getEventById(Long id) {
         Event event = eventRepository.getEventById(id);
         if (event == null) {
-            throw new ResourceNotFoundException("Event not found with ID: " + id);
+            throw new DomainNotFoundException("Event not found with ID: " + id);
         }
 
         List<EventAnimal> animaisEvento = eventAnimalRepository.findByFeirinha(event);
@@ -63,11 +63,11 @@ public class GetEventsUseCase {
         List<EventDto> eventDtos = eventPage.stream().map(event -> {
             List<Long> idsAnimais = eventAnimalRepository.findByFeirinha(event).stream()
                     .map(ea -> ea.getAnimal().getId())
-                    .collect(Collectors.toList());
+                    .toList();
 
             List<Long> idsVoluntarios = eventWorkerRepository.findByFeirinha(event).stream()
                     .map(ew -> ew.getIdWorker().getId())
-                    .collect(Collectors.toList());
+                    .toList();
 
             return new EventDto(
                     event.getId(),
@@ -77,7 +77,7 @@ public class GetEventsUseCase {
                     idsAnimais,
                     idsVoluntarios
             );
-        }).collect(Collectors.toList());
+        }).toList();
 
 
         return new PageImpl<>(eventDtos, pageable, eventPage.getTotalElements());

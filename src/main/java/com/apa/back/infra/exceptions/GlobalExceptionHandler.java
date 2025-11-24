@@ -1,5 +1,8 @@
 package com.apa.back.infra.exceptions;
 
+import com.apa.back.core.exceptions.DomainConflictException;
+import com.apa.back.core.exceptions.DomainNotFoundException;
+import com.apa.back.core.exceptions.DomainUsedTokenException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,6 +34,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex){
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(DomainNotFoundException.class)
+    public ResponseEntity<String> handleDomainNotFoundException(DomainNotFoundException ex) {
+        return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(DomainConflictException.class)
+    public ResponseEntity<String> handleDomainConflictException(DomainConflictException ex) {
+        return ResponseEntity.status(409).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DomainUsedTokenException.class)
+    public ResponseEntity<String> handleDomainUsedTokenException(DomainUsedTokenException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(ResponseStatusException.class)

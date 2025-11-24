@@ -4,7 +4,7 @@ import com.apa.back.core.domain.entities.PasswordResetToken;
 import com.apa.back.core.domain.entities.User;
 import com.apa.back.core.domain.repositories.PasswordResetTokenRepository;
 import com.apa.back.core.domain.repositories.UserRepository;
-import com.apa.back.infra.exceptions.UsedTokenException;
+import com.apa.back.core.exceptions.DomainUsedTokenException;
 import com.apa.back.infra.utils.EmailUseCase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -62,7 +62,7 @@ public class PasswordResetUseCase {
         }
 
         if (resetToken.isUsed()) {
-            throw new UsedTokenException("Esse token ja foi utilizado");
+            throw new DomainUsedTokenException("Esse token ja foi utilizado");
         }
 
         User user = resetToken.getUser();

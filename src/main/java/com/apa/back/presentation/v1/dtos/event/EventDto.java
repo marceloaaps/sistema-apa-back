@@ -12,7 +12,7 @@ import java.util.List;
 public record EventDto(
 
         @Schema(description = "ID do evento (feirinha)", example = "1", nullable = true)
-        Long idFeirinha,
+        Long idResponsavel,
 
         @NotNull(message = "A data de início do evento é obrigatória")
         @Schema(description = "Data de início do evento", example = "2025-06-10T08:00:00Z", required = true)
