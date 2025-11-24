@@ -1,0 +1,109 @@
+CREATE OR REPLACE FUNCTION registrar_movimentacao(
+    p_id_animal INT,
+    p_tipo_evento TEXT,
+    p_data_evento DATE,
+    p_observacoes TEXT DEFAULT NULL,
+    p_id_pessoa INT DEFAULT NULL
+)
+RETURNS INT AS $$
+DECLARE
+    v_id_movimentacao INT;
+BEGIN
+    IF p_tipo_evento = 'Adoção' AND p_id_pessoa IS NULL THEN
+        RAISE EXCEPTION 'Para evento de Adoção é necessário informar id_pessoa';
+    END IF;
+
+    INSERT INTO movimentacao (
+        id_animal, tipo_evento, data_evento, observacoes, id_pessoa
+    ) VALUES (
+        p_id_animal, p_tipo_evento, p_data_evento, p_observacoes, p_id_pessoa
+    )
+    RETURNING id_movimentacao INTO v_id_movimentacao;
+
+    RETURN v_id_movimentacao;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION historico_animal(p_id_animal INT)
+RETURNS TABLE (
+    id_movimentacao INT,
+    tipo_evento TEXT,
+    data_evento DATE,
+    observacoes TEXT,
+    id_pessoa INT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT id_movimentacao, tipo_evento, data_evento, observacoes, id_pessoa
+    FROM movimentacao
+    WHERE id_animal = p_id_animal
+    ORDER BY data_evento DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION situacao_animal(p_id_animal INT)
+RETURNS TEXT AS $$
+DECLARE
+    v_tipo_evento TEXT;
+    v_id_pessoa INT;
+    v_nome_pessoa TEXT;
+BEGIN
+    SELECT tipo_evento, id_pessoa
+    INTO v_tipo_evento, v_id_pessoa
+    FROM movimentacao
+    WHERE id_animal = p_id_animal
+    ORDER BY data_evento DESC
+    LIMIT 1;
+
+    IF NOT FOUND THEN
+        RETURN 'Animal sem movimentações registradas';
+    END IF;
+
+    IF v_tipo_evento = 'Adoção' THEN
+        SELECT nome INTO v_nome_pessoa FROM pessoas WHERE id_pessoa = v_id_pessoa;
+        RETURN 'Adotado por ' || v_nome_pessoa;
+    ELSIF v_tipo_evento = 'Entrada' THEN
+        RETURN 'No abrigo (entrada registrada)';
+    ELSIF v_tipo_evento = 'Devolução' OR v_tipo_evento = 'Retorno' THEN
+        RETURN 'No abrigo (retornado/devolvido)';
+    ELSE
+        RETURN 'Situação indefinida';
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TABLE pessoas (
+    id_pessoa SERIAL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    telefone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    documento VARCHAR(20),
+    endereco TEXT,         
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE tipos_pessoa (
+    id_tipo SERIAL PRIMARY KEY,
+    nome_tipo VARCHAR(50) NOT NULL UNIQUE
+);
+
+
+CREATE TABLE perfil_pessoa (
+    id SERIAL PRIMARY KEY,
+    id_pessoa INT NOT NULL REFERENCES pessoas(id_pessoa) ON DELETE CASCADE,
+    id_tipo INT NOT NULL REFERENCES tipos_pessoa(id_tipo) ON DELETE CASCADE,
+    UNIQUE (id_pessoa, id_tipo)
+);
+
+CREATE TABLE perfis_acesso (
+    id_perfil SERIAL PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE usuarios (
+    id_usuario SERIAL PRIMARY KEY,
+    id_pessoa INT NOT NULL UNIQUE REFERENCES pessoas(id_pessoa) ON DELETE CASCADE,
+    senha TEXT NOT NULL,
+    id_perfil INT NOT NULL REFERENCES perfis_acesso(id_perfil),
+    is_active BOOLEAN DEFAULT TRUE
+);
