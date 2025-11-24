@@ -8,6 +8,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 public class ReturnEventModelAssembler {
 
+    private ReturnEventModelAssembler modelAssembler;
+
     public static ReturnEventModel toModel(ReturnEventDto dto) {
         ReturnEventModel model = new ReturnEventModel(dto);
 

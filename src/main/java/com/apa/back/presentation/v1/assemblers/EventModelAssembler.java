@@ -7,6 +7,8 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 public class EventModelAssembler {
 
+    private EventModelAssembler modelAssembler;
+
     public static EventModel toModel(EventDto dto) {
         EventModel model = new EventModel(dto);
 
