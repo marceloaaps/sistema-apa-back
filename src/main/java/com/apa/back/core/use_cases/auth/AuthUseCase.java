@@ -22,19 +22,16 @@ public class AuthUseCase {
     private final PasswordBcrypt passwordBcrypt;
     private final UserRepository userRepository;
     private final JwtEncoder jwtEncoder;
-    private LoginResponseDto loginResponseDto;
     private final TokenCache tokenCache;
-    private final PasswordBcrypt passwordEncoder;
 
 
-    private final Long expirationTime = 3600L;
+    private static final Long EXPIRATION_TIME = 3600L;
 
-    public AuthUseCase(PasswordBcrypt passwordBcrypt, UserRepository userRepository, JwtEncoder jwtEncoder, TokenCache tokenCache, PasswordBcrypt passwordEncoder) {
+    public AuthUseCase(PasswordBcrypt passwordBcrypt, UserRepository userRepository, JwtEncoder jwtEncoder, TokenCache tokenCache) {
         this.passwordBcrypt = passwordBcrypt;
         this.userRepository = userRepository;
         this.jwtEncoder = jwtEncoder;
         this.tokenCache = tokenCache;
-        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -85,7 +82,7 @@ public class AuthUseCase {
                 .issuer("apa-api")
                 .subject(user.get().getId().toString())
                 .issuedAt(now)
-                .expiresAt(now.plusSeconds(expirationTime))
+                .expiresAt(now.plusSeconds(EXPIRATION_TIME))
                 .claim("scope", user.get().getUserRole().toString())
                 .build();
 
@@ -93,7 +90,7 @@ public class AuthUseCase {
 
         tokenCache.storeToken(user.get().getId().toString(), token);
 
-        return new LoginResponseDto(token, expirationTime);
+        return new LoginResponseDto(token, EXPIRATION_TIME);
     }
 
 

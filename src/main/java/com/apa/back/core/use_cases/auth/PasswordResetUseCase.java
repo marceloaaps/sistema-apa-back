@@ -23,7 +23,7 @@ public class PasswordResetUseCase {
     private final EmailUseCase emailUseCase;
 
     @Value("${hostname.url}")
-    private String HOSTNAME_URL;
+    private String hostnameUrl;
 
     public PasswordResetUseCase(PasswordResetTokenRepository tokenRepository, UserRepository userRepository, EmailUseCase emailUseCase) {
         this.tokenRepository = tokenRepository;
@@ -45,9 +45,7 @@ public class PasswordResetUseCase {
 
         tokenRepository.save(resetToken);
 
-        String link = HOSTNAME_URL + "/redefinir-senha?token=" + token;
-
-        System.out.println(link);
+        String link = hostnameUrl + "/redefinir-senha?token=" + token;
 
         emailUseCase.sendEmail(user.getEmail(), "Redefinição de senha",
                 "Clique no link para redefinir sua senha: " + link);

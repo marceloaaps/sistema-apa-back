@@ -50,7 +50,7 @@ public class AnimalUseCase {
     public AnimalDto updateAnimal(Long id, AnimalDto animalDTO) {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
-        if (!existingAnimal.isPresent()) {
+        if (existingAnimal.isEmpty()) {
             throw new DomainNotFoundException("Animal não encontrado: ID " + id);
         }
 
@@ -82,7 +82,7 @@ public class AnimalUseCase {
     public void deleteAnimal(Long id) {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
-        if (!existingAnimal.isPresent()) {
+        if (existingAnimal.isEmpty()) {
             throw new DomainNotFoundException("Animal não encontrado: ID " + id);
         }
 
@@ -123,7 +123,7 @@ public class AnimalUseCase {
     public AnimalDto getAnimalById(Long id) {
         Optional<Animal> existingAnimal = animalRepository.findById(id);
 
-        if (!existingAnimal.isPresent()) {
+        if (existingAnimal.isEmpty()) {
             throw new DomainNotFoundException("Animal não encontrado");
         }
 
