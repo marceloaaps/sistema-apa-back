@@ -21,8 +21,17 @@ public class AnimalDto {
     @Schema(description = "Raça do animal", example = "Labrador")
     private String raca;
 
-    @Schema(description = "ID do registro de saúde do animal", example = "456")
-    private Long idSaude;
+    @Schema(description = "RG único do animal", example = "RG-2024-001")
+    private String rgAnimal;
+
+    @Schema(description = "Espécie do animal", example = "Cachorro")
+    private String especie;
+
+    @Schema(description = "Sexo do animal", example = "M", allowableValues = {"M", "F"})
+    private String sexo;
+
+    @Schema(description = "Cor do animal", example = "Marrom")
+    private String cor;
 
     @Schema(description = "Descrição do comportamento do animal", example = "Calmo e amigável")
     private String comportamento;
@@ -36,15 +45,17 @@ public class AnimalDto {
     @Schema(description = "Indica se o animal está disponível para adoção", example = "true")
     private Boolean disponivelParaAdocao;
 
-
-
-    public AnimalDto(Long id, String nome, Integer idade, String raca, Long idSaude,
-                     String comportamento, String historico, LocalDate dataCadastro, Boolean disponivelParaAdocao) {
+    public AnimalDto(Long id, String nome, Integer idade, String raca, String rgAnimal,
+                     String especie, String sexo, String cor, String comportamento,
+                     String historico, LocalDate dataCadastro, Boolean disponivelParaAdocao) {
         this.id = id;
         this.nome = nome;
         this.idade = idade;
         this.raca = raca;
-        this.idSaude = idSaude;
+        this.rgAnimal = rgAnimal;
+        this.especie = especie;
+        this.sexo = sexo;
+        this.cor = cor;
         this.comportamento = comportamento;
         this.historico = historico;
         this.dataCadastro = dataCadastro;

@@ -43,7 +43,10 @@ class AnimalControllerTest {
                 "Rex",
                 3,
                 "Labrador",
-                456L,
+                "RG-2024-001",
+                "Cachorro",
+                "M",
+                "Marrom",
                 "Calmo e amigável",
                 "Encontrado na rua, saudável",
                 LocalDate.of(2023, 4, 1),
@@ -61,6 +64,11 @@ class AnimalControllerTest {
         assertEquals(201, response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertEquals(dtoEntrada.getId(), response.getBody().getAnimalDto().getId());
+        assertEquals("Rex", response.getBody().getAnimalDto().getNome());
+        assertEquals("RG-2024-001", response.getBody().getAnimalDto().getRgAnimal());
+        assertEquals("Cachorro", response.getBody().getAnimalDto().getEspecie());
+        assertEquals("M", response.getBody().getAnimalDto().getSexo());
+        assertEquals("Marrom", response.getBody().getAnimalDto().getCor());
         verify(animalUseCase, times(1)).createAnimal(dtoEntrada);
     }
 
@@ -73,13 +81,14 @@ class AnimalControllerTest {
 
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
+        assertEquals("Labrador", response.getBody().getAnimalDto().getRaca());
         verify(animalUseCase).updateAnimal(1L, dtoEntrada);
     }
 
     @Test
     void updateAnimal_deveRetornarNotFoundQuandoAnimalNaoExistir() {
-        // now the use case throws DomainNotFoundException when not found
-        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999")).when(animalUseCase).updateAnimal(eq(999L), any(AnimalDto.class));
+        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999"))
+            .when(animalUseCase).updateAnimal(eq(999L), any(AnimalDto.class));
 
         ResponseEntity<AnimalModel> response = animalController.updateAnimal(999L, criarAnimalDtoExemplo());
 
@@ -90,7 +99,6 @@ class AnimalControllerTest {
 
     @Test
     void deleteAnimal_deveRetornarNoContentQuandoExcluirComSucesso() {
-        // delete is void now, so mock doNothing
         doNothing().when(animalUseCase).deleteAnimal(1L);
 
         ResponseEntity<Void> response = animalController.deleteAnimal(1L);
@@ -101,7 +109,8 @@ class AnimalControllerTest {
 
     @Test
     void deleteAnimal_deveRetornarNotFoundQuandoNaoExcluir() {
-        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999")).when(animalUseCase).deleteAnimal(999L);
+        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999"))
+            .when(animalUseCase).deleteAnimal(999L);
 
         ResponseEntity<Void> response = animalController.deleteAnimal(999L);
 
@@ -118,12 +127,14 @@ class AnimalControllerTest {
 
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
+        assertTrue(response.getBody().getAnimalDto().getDisponivelParaAdocao());
         verify(animalUseCase).restoreAnimal(1L);
     }
 
     @Test
     void restoreAnimal_deveRetornarNotFoundQuandoNaoRestaurar() {
-        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999")).when(animalUseCase).restoreAnimal(999L);
+        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999"))
+            .when(animalUseCase).restoreAnimal(999L);
 
         ResponseEntity<AnimalModel> response = animalController.restoreAnimal(999L);
 
@@ -141,12 +152,14 @@ class AnimalControllerTest {
 
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
+        assertEquals(1L, response.getBody().getAnimalDto().getId());
         verify(animalUseCase).getAnimalById(1L);
     }
 
     @Test
     void getAnimalById_deveRetornarNotFoundQuandoNaoEncontrar() {
-        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999")).when(animalUseCase).getAnimalById(999L);
+        doThrow(new DomainNotFoundException("Animal não encontrado: ID 999"))
+            .when(animalUseCase).getAnimalById(999L);
 
         ResponseEntity<AnimalModel> response = animalController.getAnimalById(999L);
 
@@ -161,26 +174,30 @@ class AnimalControllerTest {
         Pageable pageable = PageRequest.of(0, 20);
         Page<AnimalDto> page = new PageImpl<>(Collections.singletonList(dto));
 
-        PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements());
+        PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(
+            page.getSize(),
+            page.getNumber(),
+            page.getTotalElements()
+        );
         PagedModel<AnimalModel> pagedModel = PagedModel.of(Collections.emptyList(), metadata);
 
         when(animalUseCase.getAnimaisDisponiveis(pageable)).thenReturn(page);
-
         when(pagedResourcesAssembler.toModel(
                 eq(page),
                 ArgumentMatchers.<RepresentationModelAssembler<AnimalDto, AnimalModel>>any())
         ).thenReturn(pagedModel);
 
-        ResponseEntity<PagedModel<AnimalModel>> response = animalController.getAnimaisDisponiveis(pageable, pagedResourcesAssembler);
+        ResponseEntity<PagedModel<AnimalModel>> response = animalController.getAnimaisDisponiveis(
+            pageable,
+            pagedResourcesAssembler
+        );
 
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
         verify(animalUseCase).getAnimaisDisponiveis(pageable);
-
         verify(pagedResourcesAssembler).toModel(
                 eq(page),
                 ArgumentMatchers.<RepresentationModelAssembler<AnimalDto, AnimalModel>>any()
         );
     }
-
 }

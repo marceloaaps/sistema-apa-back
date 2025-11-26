@@ -26,25 +26,18 @@ public class AnimalUseCase {
                 animalDTO.getNome(),
                 animalDTO.getIdade(),
                 animalDTO.getRaca(),
-                animalDTO.getIdSaude(),
+                animalDTO.getRgAnimal(),
+                animalDTO.getEspecie(),
+                animalDTO.getSexo(),
+                animalDTO.getCor(),
                 animalDTO.getComportamento(),
                 animalDTO.getHistorico(),
                 animalDTO.getDataCadastro(),
-                animalDTO.getDisponivelParaAdocao()
+                animalDTO.getDisponivelParaAdocao() != null ? animalDTO.getDisponivelParaAdocao() : true
         );
         Animal animalRes = animalRepository.save(animal);
 
-        return new AnimalDto(
-                animalRes.getId(),
-                animalRes.getNome(),
-                animalRes.getIdade(),
-                animalRes.getRaca(),
-                animalRes.getIdSaude(),
-                animalRes.getComportamento(),
-                animalRes.getHistorico(),
-                animalRes.getDataCadastro(),
-                animalRes.getDisponivelParaAdocao()
-        );
+        return mapToDto(animalRes);
     }
 
     public AnimalDto updateAnimal(Long id, AnimalDto animalDTO) {
@@ -58,7 +51,10 @@ public class AnimalUseCase {
         animal.setNome(animalDTO.getNome());
         animal.setIdade(animalDTO.getIdade());
         animal.setRaca(animalDTO.getRaca());
-        animal.setIdSaude(animalDTO.getIdSaude());
+        animal.setRgAnimal(animalDTO.getRgAnimal());
+        animal.setEspecie(animalDTO.getEspecie());
+        animal.setSexo(animalDTO.getSexo());
+        animal.setCor(animalDTO.getCor());
         animal.setComportamento(animalDTO.getComportamento());
         animal.setHistorico(animalDTO.getHistorico());
         animal.setDataCadastro(animalDTO.getDataCadastro());
@@ -66,17 +62,7 @@ public class AnimalUseCase {
 
         animalRepository.save(animal);
 
-        return new AnimalDto(
-                animal.getId(),
-                animal.getNome(),
-                animal.getIdade(),
-                animal.getRaca(),
-                animal.getIdSaude(),
-                animal.getComportamento(),
-                animal.getHistorico(),
-                animal.getDataCadastro(),
-                animal.getDisponivelParaAdocao()
-        );
+        return mapToDto(animal);
     }
 
     public void deleteAnimal(Long id) {
@@ -107,17 +93,7 @@ public class AnimalUseCase {
 
         animalRepository.save(animal);
 
-        return new AnimalDto(
-                animal.getId(),
-                animal.getNome(),
-                animal.getIdade(),
-                animal.getRaca(),
-                animal.getIdSaude(),
-                animal.getComportamento(),
-                animal.getHistorico(),
-                animal.getDataCadastro(),
-                animal.getDisponivelParaAdocao()
-        );
+        return mapToDto(animal);
     }
 
     public AnimalDto getAnimalById(Long id) {
@@ -128,33 +104,28 @@ public class AnimalUseCase {
         }
 
         Animal animal = existingAnimal.get();
+        return mapToDto(animal);
+    }
+
+    public Page<AnimalDto> getAnimaisDisponiveis(Pageable pageable) {
+        return animalRepository.findAllByDisponivelParaAdocaoTrue(pageable)
+                .map(this::mapToDto);
+    }
+
+    private AnimalDto mapToDto(Animal animal) {
         return new AnimalDto(
                 animal.getId(),
                 animal.getNome(),
                 animal.getIdade(),
                 animal.getRaca(),
-                animal.getIdSaude(),
+                animal.getRgAnimal(),
+                animal.getEspecie(),
+                animal.getSexo(),
+                animal.getCor(),
                 animal.getComportamento(),
                 animal.getHistorico(),
                 animal.getDataCadastro(),
                 animal.getDisponivelParaAdocao()
         );
     }
-
-    public Page<AnimalDto> getAnimaisDisponiveis(Pageable pageable) {
-        return animalRepository.findAllByDisponivelParaAdocaoTrue(pageable)
-                .map(animal -> new AnimalDto(
-                        animal.getId(),
-                        animal.getNome(),
-                        animal.getIdade(),
-                        animal.getRaca(),
-                        animal.getIdSaude(),
-                        animal.getComportamento(),
-                        animal.getHistorico(),
-                        animal.getDataCadastro(),
-                        animal.getDisponivelParaAdocao()
-                ));
-    }
-
-
 }

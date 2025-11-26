@@ -13,7 +13,6 @@ import java.util.List;
 @Component
 public class DtoMapper {
 
-
     public List<AnimalDto> mapToAnimalDtos(List<EventAnimal> animaisEvento) {
         return animaisEvento.stream().map(ea -> {
             Animal a = ea.getAnimal();
@@ -22,7 +21,10 @@ public class DtoMapper {
                     .nome(a.getNome())
                     .idade(a.getIdade())
                     .raca(a.getRaca())
-                    .idSaude(a.getIdSaude())
+                    .rgAnimal(a.getRgAnimal())
+                    .especie(a.getEspecie())
+                    .sexo(a.getSexo())
+                    .cor(a.getCor())
                     .comportamento(a.getComportamento())
                     .historico(a.getHistorico())
                     .dataCadastro(a.getDataCadastro())
@@ -42,6 +44,4 @@ public class DtoMapper {
             );
         }).toList();
     }
-
-
 }
