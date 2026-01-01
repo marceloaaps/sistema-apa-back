@@ -2,7 +2,7 @@ package com.apa.back.core.domain.services;
 
 import com.apa.back.core.domain.entities.Event.Event;
 import com.apa.back.core.domain.entities.User;
-import com.apa.back.core.domain.repositories.Event.EventRepository;
+import com.apa.back.core.domain.repositories.event.EventRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

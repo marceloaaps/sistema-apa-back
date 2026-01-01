@@ -1,4 +1,4 @@
-package com.apa.back.core.domain.repositories.Event;
+package com.apa.back.core.domain.repositories.event;
 
 import com.apa.back.core.domain.entities.Event.Event;
 import org.springframework.data.jpa.repository.JpaRepository;

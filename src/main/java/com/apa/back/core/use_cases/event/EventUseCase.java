@@ -1,7 +1,7 @@
 package com.apa.back.core.use_cases.event;
 
 import com.apa.back.core.domain.entities.Event.*;
-import com.apa.back.core.domain.repositories.Event.EventRepository;
+import com.apa.back.core.domain.repositories.event.EventRepository;
 import com.apa.back.core.exceptions.DomainNotFoundException;
 import com.apa.back.core.domain.services.EventAssociationService;
 import com.apa.back.core.domain.services.EventDomainService;
