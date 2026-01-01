@@ -36,7 +36,7 @@ public class AuthUseCase {
 
 
 
-    public String registerAndGenerateToken(RegisterDto registerDto) {
+    public LoginResponseDto registerAndGenerateToken(RegisterDto registerDto) {
 
         User usuario = new User();
         usuario.setNome(registerDto.nome());
@@ -55,7 +55,7 @@ public class AuthUseCase {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("apa-api")
                 .issuedAt(now)
-                .expiresAt(now.plusSeconds(3600))
+                .expiresAt(now.plusSeconds(EXPIRATION_TIME))
                 .subject(usuario.getId().toString())
                 .claim("scope", usuario.getId().toString())
                 .build();
@@ -65,8 +65,7 @@ public class AuthUseCase {
 
         tokenCache.storeToken(usuario.getId().toString(), token);
 
-
-        return token;
+        return new LoginResponseDto(token, EXPIRATION_TIME);
     }
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {

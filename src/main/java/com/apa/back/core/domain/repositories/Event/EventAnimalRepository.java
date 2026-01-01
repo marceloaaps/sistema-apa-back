@@ -1,4 +1,4 @@
-package com.apa.back.core.domain.repositories;
+package com.apa.back.core.domain.repositories.Event;
 
 import com.apa.back.core.domain.entities.Event.Event;
 import com.apa.back.core.domain.entities.Event.EventAnimal;

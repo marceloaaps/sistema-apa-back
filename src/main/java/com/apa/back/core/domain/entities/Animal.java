@@ -63,21 +63,26 @@ public class Animal {
     public Animal() {
     }
 
-    public Animal(Long id, String nome, Integer idade, String raca, String rgAnimal, String especie,
-                  String sexo, String cor, String comportamento, String historico,
-                  LocalDate dataCadastro, boolean disponivelParaAdocao) {
+    public Animal(Long id, String nome, Integer idade, String raca, String rgAnimal, String especie, String sexo,
+                  String cor, String comportamento, String historico, LocalDate dataCadastro, Boolean disponivelParaAdocao,
+                  LocalDate deletadoEm, Integer deletadoPor, List<HistoricoSaude> historicoSaude,
+                  List<Vacinacao> vacinacoes) {
+        this.deletadoEm = deletadoEm;
+        this.comportamento = comportamento;
+        this.cor = cor;
+        this.dataCadastro = dataCadastro;
+        this.deletadoPor = deletadoPor;
+        this.disponivelParaAdocao = disponivelParaAdocao;
+        this.especie = especie;
+        this.historico = historico;
+        this.historicoSaude = historicoSaude;
         this.id = id;
-        this.nome = nome;
         this.idade = idade;
+        this.nome = nome;
         this.raca = raca;
         this.rgAnimal = rgAnimal;
-        this.especie = especie != null ? especie : "Desconhecida";
         this.sexo = sexo;
-        this.cor = cor;
-        this.comportamento = comportamento;
-        this.historico = historico;
-        this.dataCadastro = dataCadastro;
-        this.disponivelParaAdocao = disponivelParaAdocao;
+        this.vacinacoes = vacinacoes;
     }
 
     public void softDelete(Integer deletadoPor) {
@@ -105,4 +110,22 @@ public class Animal {
         vacinacoes.remove(vacinacao);
         vacinacao.setAnimal(null);
     }
+
+    public void AnimalBuilder(Long id, String nome, Integer idade, String raca, String rgAnimal, String especie,
+                         String sexo, String cor, String comportamento, String historico,
+                         LocalDate dataCadastro, boolean disponivelParaAdocao) {
+        this.id = id;
+        this.nome = nome;
+        this.idade = idade;
+        this.raca = raca;
+        this.rgAnimal = rgAnimal;
+        this.especie = especie != null ? especie : "Desconhecida";
+        this.sexo = sexo;
+        this.cor = cor;
+        this.comportamento = comportamento;
+        this.historico = historico;
+        this.dataCadastro = dataCadastro;
+        this.disponivelParaAdocao = disponivelParaAdocao;
+    }
+
 }

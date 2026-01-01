@@ -55,7 +55,8 @@ class EventControllerTest {
                 new Date(2025 - 1900, 5, 10, 17, 0, 0),
                 "Praça Nova",
                 Arrays.asList(1L, 2L),
-                Arrays.asList(10L, 20L)
+                Arrays.asList(10L, 20L),
+                1L
         );
 
         EventDto returnedDto = new EventDto(
@@ -64,7 +65,8 @@ class EventControllerTest {
                 inputDto.dataFimFeira(),
                 inputDto.localizacao(),
                 inputDto.idsVoluntarios(),
-                inputDto.idsAnimais()
+                inputDto.idsAnimais(),
+                1L
         );
 
         when(eventUseCase.createEvent(any(EventDto.class))).thenReturn(returnedDto);
@@ -142,7 +144,8 @@ class EventControllerTest {
                 new Date(2025 - 1900, 5, 10, 17, 0, 0),
                 "Local 1",
                 Arrays.asList(1L),
-                Arrays.asList(10L)
+                Arrays.asList(10L),
+                1L
         );
 
         List<EventDto> eventList = List.of(event1);
@@ -171,7 +174,8 @@ class EventControllerTest {
                 new Date(2025 - 1900, 5, 10, 17, 0, 0),
                 "Praça Atualizada",
                 Arrays.asList(1L, 2L),
-                Arrays.asList(10L, 20L)
+                Arrays.asList(10L, 20L),
+                1L
         );
 
         EventDto returnedDto = inputDto;

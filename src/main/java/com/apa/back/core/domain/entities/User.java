@@ -2,10 +2,6 @@ package com.apa.back.core.domain.entities;
 
 import com.apa.back.core.domain.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
@@ -32,6 +28,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role", columnDefinition = "user_role_enum", insertable = false)
     private UserRole userRole;
+
+    @Column(nullable = false)
+    private Boolean aprovado;
 
     public User() {
     }
@@ -98,4 +97,5 @@ public class User {
         this.userRole = userRole;
         return this;
     }
+
 }

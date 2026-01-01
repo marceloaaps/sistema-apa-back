@@ -1,10 +1,15 @@
 package com.apa.back.core.use_cases.usuario;
 
 import com.apa.back.core.domain.entities.User;
+import com.apa.back.core.domain.enums.UserRole;
 import com.apa.back.core.domain.repositories.UserRepository;
 import com.apa.back.presentation.v1.dtos.user.UsuarioDto;
+import com.apa.back.presentation.v1.dtos.user.UsuarioRoleDto;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,5 +29,29 @@ public class UsuarioUseCase {
                 user.getEmail(),
                 user.getDataNascimento().toString()
         ));
+    }
+
+    public List<UsuarioDto> getAllPending() {
+        return userRepository.findAllByAprovadoFalse()
+                .stream()
+                .map(user -> new UsuarioDto(
+                        user.getNome(),
+                        user.getEmail(),
+                        user.getDataNascimento().toString()
+                ))
+                .toList();
+    }
+
+    @Transactional
+    public UsuarioDto updateUsuario(Long id, UsuarioRoleDto usuarioRoleDto) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+        user.setUserRole(UserRole.fromValue(usuarioRoleDto.role()));
+
+        userRepository.updateUserRoleById(user.getUserRole(), id);
+
+
+        return new UsuarioDto(user.getNome(), user.getEmail(), user.getDataNascimento().toString());
     }
 }

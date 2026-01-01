@@ -2,10 +2,12 @@ package com.apa.back.presentation.v1.controllers;
 
 import com.apa.back.core.use_cases.usuario.UsuarioUseCase;
 import com.apa.back.presentation.v1.dtos.user.UsuarioDto;
+import com.apa.back.presentation.v1.dtos.user.UsuarioRoleDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +40,13 @@ public class UsuarioController {
 
         return user.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(404).body(null));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioDto> updateRole(@PathVariable Long id, @RequestBody UsuarioRoleDto usuarioRoleDto) {
+
+        UsuarioDto user = userUseCase.updateUsuario(id, usuarioRoleDto);
+        return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(user);
     }
 
 

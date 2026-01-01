@@ -21,7 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/animals/v1")
+@RequestMapping("/v1/animals")
 public class AnimalController {
 
     private final AnimalUseCase animalUseCase;

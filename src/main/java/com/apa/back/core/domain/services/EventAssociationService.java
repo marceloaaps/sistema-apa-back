@@ -1,4 +1,4 @@
-package com.apa.back.core.services;
+package com.apa.back.core.domain.services;
 
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.entities.User;
@@ -8,8 +8,8 @@ import com.apa.back.core.domain.entities.Event.EventAnimalId;
 import com.apa.back.core.domain.entities.Event.EventWorker;
 import com.apa.back.core.domain.entities.Event.EventWorkerId;
 import com.apa.back.core.domain.repositories.AnimalRepository;
-import com.apa.back.core.domain.repositories.EventAnimalRepository;
-import com.apa.back.core.domain.repositories.EventWorkerRepository;
+import com.apa.back.core.domain.repositories.Event.EventAnimalRepository;
+import com.apa.back.core.domain.repositories.Event.EventWorkerRepository;
 import com.apa.back.core.domain.repositories.UserRepository;
 import com.apa.back.core.exceptions.DomainNotFoundException;
 import org.springframework.stereotype.Service;

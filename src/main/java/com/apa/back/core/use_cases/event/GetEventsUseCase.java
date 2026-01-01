@@ -3,9 +3,9 @@ package com.apa.back.core.use_cases.event;
 import com.apa.back.core.domain.entities.Event.Event;
 import com.apa.back.core.domain.entities.Event.EventAnimal;
 import com.apa.back.core.domain.entities.Event.EventWorker;
-import com.apa.back.core.domain.repositories.EventAnimalRepository;
-import com.apa.back.core.domain.repositories.EventRepository;
-import com.apa.back.core.domain.repositories.EventWorkerRepository;
+import com.apa.back.core.domain.repositories.Event.EventAnimalRepository;
+import com.apa.back.core.domain.repositories.Event.EventRepository;
+import com.apa.back.core.domain.repositories.Event.EventWorkerRepository;
 import com.apa.back.core.exceptions.DomainNotFoundException;
 import com.apa.back.infra.mappers.DtoMapper;
 import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class GetEventsUseCase {
@@ -75,7 +74,8 @@ public class GetEventsUseCase {
                     event.getFinishEventDate(),
                     event.getLocation(),
                     idsAnimais,
-                    idsVoluntarios
+                    idsVoluntarios,
+                    event.getIdResponsavel().getId()
             );
         }).toList();
 

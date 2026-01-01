@@ -1,4 +1,4 @@
-package com.apa.back.core.services;
+package com.apa.back.core.domain.services;
 
 import com.apa.back.core.domain.entities.User;
 import com.apa.back.core.domain.repositories.UserRepository;

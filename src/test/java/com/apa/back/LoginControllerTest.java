@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
@@ -40,12 +41,13 @@ class LoginControllerTest {
     @Test
     void register_deveChamarUseCaseERetornar201() {
         RegisterDto registerDto = new RegisterDto("Neymar Jr", "njr@psg.com", LocalDate.of(1992, 2, 1), "Senhateste@123");
-        when(authUseCase.registerAndGenerateToken(any(RegisterDto.class))).thenReturn("token-fake");
+        when(authUseCase.registerAndGenerateToken(any(RegisterDto.class))).thenReturn(new LoginResponseDto("token-fake", 3600L));
 
-        ResponseEntity<String> response = loginController.register(registerDto);
+        ResponseEntity<LoginResponseDto> response = loginController.register(registerDto);
 
         assertEquals(201, response.getStatusCodeValue());
-        assertEquals("Usuário criado com sucesso.", response.getBody());
+        assertNotNull(response.getBody());
+        assertEquals("token-fake", response.getBody().token());
         verify(authUseCase).registerAndGenerateToken(registerDto);
     }
 
@@ -77,14 +79,16 @@ class LoginControllerTest {
     }
 
     @Test
-    void resetPassword_deveChamarUseCaseERetornar200() {
-        ResetPasswordRequestDto request = new ResetPasswordRequestDto("token123", "novaSenha123");
-        doNothing().when(resetUseCase).resetPassword(request.token(), request.newPassword());
+    void shouldResetPasswordAndReturn200() {
+        ResetPasswordRequestDto request =
+                new ResetPasswordRequestDto("token123", "novaSenha123");
 
         ResponseEntity<String> response = loginController.resetPassword(request);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Senha redefinida com sucesso.", response.getBody());
+
         verify(resetUseCase).resetPassword(request.token(), request.newPassword());
     }
+
 }

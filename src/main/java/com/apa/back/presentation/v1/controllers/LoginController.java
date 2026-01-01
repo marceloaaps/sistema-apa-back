@@ -33,17 +33,18 @@ public class LoginController {
             description = "Registra um novo usuário no sistema e gera um token de autenticação.",
             responses = {
                     @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso",
-                            content = @Content(mediaType = "text/plain")),
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LoginResponseDto.class))),
                     @ApiResponse(responseCode = "400", description = "Dados inválidos para registro",
                             content = @Content)
             }
     )
     @PostMapping("/register")
-    public ResponseEntity<String> register(
+    public ResponseEntity<LoginResponseDto> register(
             @Parameter(description = "Dados para registro do usuário", required = true)
             @Valid @RequestBody RegisterDto registerDto) {
-        authUseCase.registerAndGenerateToken(registerDto);
-        return ResponseEntity.status(201).body("Usuário criado com sucesso.");
+        LoginResponseDto response = authUseCase.registerAndGenerateToken(registerDto);
+        return ResponseEntity.status(201).body(response);
     }
 
     @Operation(

@@ -9,8 +9,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 public class AnimalModelAssembler {
 
-    private AnimalModelAssembler modelAssembler;
-
     public static AnimalModel toModel(AnimalDto dto) {
         AnimalModel model = new AnimalModel(dto);
 

@@ -44,5 +44,27 @@ public class HistoricoSaude {
         this.castrado = castrado != null ? castrado : false;
         this.dataEvento = LocalDateTime.now();
     }
+
+    // Novo: construtor com data explícita
+    public HistoricoSaude(Animal animal, String tipoEvento, String descricao, Boolean castrado, LocalDateTime dataEvento) {
+        this.animal = animal;
+        this.tipoEvento = tipoEvento;
+        this.descricao = descricao;
+        this.castrado = castrado != null ? castrado : false;
+        this.dataEvento = dataEvento != null ? dataEvento : LocalDateTime.now();
+    }
+
+    // Fábricas para os tipos usados nos INSERTs fornecidos
+    public static HistoricoSaude doenca(Animal animal, String descricao) {
+        return new HistoricoSaude(animal, "Doença", descricao, false, LocalDateTime.now());
+    }
+
+    public static HistoricoSaude deficiencia(Animal animal, String descricao) {
+        return new HistoricoSaude(animal, "Deficiência", descricao, false, LocalDateTime.now());
+    }
+
+    public static HistoricoSaude historico(Animal animal, String descricao) {
+        return new HistoricoSaude(animal, "Histórico", descricao, false, LocalDateTime.now());
+    }
 }
 

@@ -1,21 +1,21 @@
-package com.apa.back.core.services;
+package com.apa.back.core.domain.services;
 
 import com.apa.back.core.domain.entities.Event.Event;
 import com.apa.back.core.domain.entities.User;
-import com.apa.back.core.domain.repositories.EventRepository;
+import com.apa.back.core.domain.repositories.Event.EventRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
 public class EventDomainService {
-
     private final EventRepository eventRepository;
 
     public EventDomainService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
 
+    // Fazer um builder na event
     public Event createEvent(User responsavel, String localizacao, Date dataInicio, Date dataFim) {
 
         Event event = new Event();

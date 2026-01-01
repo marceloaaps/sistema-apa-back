@@ -21,8 +21,8 @@ public class AnimalUseCase {
     }
 
     public AnimalDto createAnimal(AnimalDto animalDTO) {
-        Animal animal = new Animal(
-                null,
+        Animal animal = new Animal();
+        animal.AnimalBuilder(null,
                 animalDTO.getNome(),
                 animalDTO.getIdade(),
                 animalDTO.getRaca(),
@@ -33,8 +33,7 @@ public class AnimalUseCase {
                 animalDTO.getComportamento(),
                 animalDTO.getHistorico(),
                 animalDTO.getDataCadastro(),
-                animalDTO.getDisponivelParaAdocao() != null ? animalDTO.getDisponivelParaAdocao() : true
-        );
+                animalDTO.getDisponivelParaAdocao() != null ? animalDTO.getDisponivelParaAdocao() : true);
         Animal animalRes = animalRepository.save(animal);
 
         return mapToDto(animalRes);
@@ -47,18 +46,21 @@ public class AnimalUseCase {
             throw new DomainNotFoundException("Animal não encontrado: ID " + id);
         }
 
-        Animal animal = existingAnimal.get();
-        animal.setNome(animalDTO.getNome());
-        animal.setIdade(animalDTO.getIdade());
-        animal.setRaca(animalDTO.getRaca());
-        animal.setRgAnimal(animalDTO.getRgAnimal());
-        animal.setEspecie(animalDTO.getEspecie());
-        animal.setSexo(animalDTO.getSexo());
-        animal.setCor(animalDTO.getCor());
-        animal.setComportamento(animalDTO.getComportamento());
-        animal.setHistorico(animalDTO.getHistorico());
-        animal.setDataCadastro(animalDTO.getDataCadastro());
-        animal.setDisponivelParaAdocao(animalDTO.getDisponivelParaAdocao());
+        Animal animal = new Animal();
+        animal.AnimalBuilder(
+                animalDTO.getId(),
+                animalDTO.getNome(),
+                animalDTO.getIdade(),
+                animalDTO.getRaca(),
+                animalDTO.getRgAnimal(),
+                animalDTO.getEspecie(),
+                animalDTO.getSexo(),
+                animalDTO.getCor(),
+                animalDTO.getComportamento(),
+                animalDTO.getHistorico(),
+                animalDTO.getDataCadastro(),
+                animalDTO.getDisponivelParaAdocao());
+
 
         animalRepository.save(animal);
 

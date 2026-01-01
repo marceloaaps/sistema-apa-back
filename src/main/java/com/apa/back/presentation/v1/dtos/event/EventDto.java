@@ -12,29 +12,34 @@ import java.util.List;
 public record EventDto(
 
         @Schema(description = "ID do evento (feirinha)", example = "1", nullable = true)
-        Long idResponsavel,
+        Long idFeirinha,
 
         @NotNull(message = "A data de início do evento é obrigatória")
-        @Schema(description = "Data de início do evento", example = "2025-06-10T08:00:00Z", required = true)
+        @Schema(description = "Data de início do evento", example = "2025-06-10T08:00:00Z")
         Date dataInicioFeira,
 
         @NotNull(message = "A data de fim do evento é obrigatória")
-        @Schema(description = "Data de fim do evento", example = "2025-06-10T17:00:00Z", required = true)
+        @Schema(description = "Data de fim do evento", example = "2025-06-10T17:00:00Z")
         Date dataFimFeira,
 
         @NotNull(message = "A localização é obrigatória")
         @NotEmpty(message = "A localização não pode ser vazia")
-        @Schema(description = "Localização do evento", example = "Praça Central", required = true)
+        @Schema(description = "Localização do evento", example = "Praça Central")
         String localizacao,
 
         @NotNull(message = "A lista de IDs de voluntários é obrigatória")
         @Size(min = 1, message = "Deve haver pelo menos um voluntário")
-        @Schema(description = "Lista de IDs dos voluntários", example = "[1, 2, 3]", required = true)
+        @Schema(description = "Lista de IDs dos voluntários", example = "[1, 2, 3]")
         List<Long> idsVoluntarios,
 
         @NotNull(message = "A lista de IDs de animais é obrigatória")
         @Size(min = 1, message = "Deve haver pelo menos um animal")
-        @Schema(description = "Lista de IDs dos animais", example = "[10, 20, 30]", required = true)
-        List<Long> idsAnimais
+        @Schema(description = "Lista de IDs dos animais", example = "[10, 20, 30]")
+        List<Long> idsAnimais,
+
+        @NotNull (message = "Obrigatório ter pessoa responsável pelo evento")
+        @Size(min = 1, max = 1, message = "Deve haver um responsável")
+        @Schema(description = "ID do Usuário responsável pelo evento")
+        Long idResponsavel
 
 ) {}
