@@ -3,13 +3,11 @@ package com.apa.back.core.domain.builder;
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.entities.HistoricoSaude;
 import com.apa.back.core.domain.entities.Vacinacao;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class AnimalBuilder {
 
     private Long id;
