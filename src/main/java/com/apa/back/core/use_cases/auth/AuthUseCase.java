@@ -83,6 +83,8 @@ public class AuthUseCase {
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(EXPIRATION_TIME))
                 .claim("scope", user.get().getUserRole().toString())
+                .claim("email", user.get().getEmail())
+                .claim("name", user.get().getNome())
                 .build();
 
         String token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
