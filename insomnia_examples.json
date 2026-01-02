@@ -1,0 +1,442 @@
+{
+  "baseUrl": "http://localhost:8080",
+  "notes": "Copie os corpos de request para o Insomnia. Use o header 'Authorization: Bearer <token>' onde aplicável. Este arquivo não é um _workspace_ export do Insomnia — é uma coleção de exemplos JSON para facilitar a criação manual de requests.",
+  "endpoints": [
+    {
+      "name": "Register user",
+      "method": "POST",
+      "url": "/auth/v1/register",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "nome": "Marcelo Silva",
+        "email": "marcelo@example.com",
+        "dataNascimento": "1995-05-20",
+        "senha": "Senha123"
+      },
+      "sampleResponse": {
+        "token": "dsa1ASD7sa1234Ghas2358j",
+        "expiresIn": 3600
+      }
+    },
+    {
+      "name": "Login",
+      "method": "POST",
+      "url": "/auth/v1/login",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "email": "marcelo@example.com",
+        "senha": "Senha123"
+      },
+      "sampleResponse": {
+        "token": "eyJ...",
+        "expiresIn": 3600
+      }
+    },
+    {
+      "name": "Forgot password",
+      "method": "POST",
+      "url": "/auth/v1/forgot-password",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "email": "marcelo@example.com" },
+      "sampleResponse": "Token enviado para o email informado. (text)"
+    },
+    {
+      "name": "Reset password",
+      "method": "POST",
+      "url": "/auth/v1/reset-password",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "token": "token-123456",
+        "new_password": "NovaSenha123"
+      },
+      "sampleResponse": "Senha redefinida com sucesso. (text)"
+    },
+    {
+      "name": "Get usuario by email",
+      "method": "GET",
+      "url": "/usuarios/v1?email=marcelo@example.com",
+      "headers": [],
+      "body": null,
+      "sampleResponse": {
+        "nome": "Marcelo Silva",
+        "email": "marcelo@example.com",
+        "data_nascimento": "1995-05-20"
+      }
+    },
+    {
+      "name": "Update user role",
+      "method": "PUT",
+      "url": "/configs/v1/{id}",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "role": "ADMIN" },
+      "sampleResponse": {
+        "nome": "Marcelo Silva",
+        "email": "marcelo@example.com",
+        "data_nascimento": "1995-05-20"
+      }
+    },
+    {
+      "name": "Create animal",
+      "method": "POST",
+      "url": "/animals/v1/create",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer <token>" }
+      ],
+      "body": {
+        "nome": "Rex",
+        "idade": 3,
+        "raca": "Labrador",
+        "rgAnimal": "RG-2024-001",
+        "especie": "Cachorro",
+        "sexo": "M",
+        "cor": "Marrom",
+        "comportamento": "Calmo e amigável",
+        "historico": "Encontrado na rua, saudável",
+        "dataCadastro": "2023-04-01",
+        "disponivelParaAdocao": true
+      },
+      "sampleResponse": {
+        "animalDto": {
+          "id": 123,
+          "nome": "Rex"
+        }
+      }
+    },
+    {
+      "name": "Update animal",
+      "method": "PUT",
+      "url": "/animals/v1/{id}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer <token>" }
+      ],
+      "body": {
+        "nome": "Rex Updated",
+        "idade": 4,
+        "raca": "Labrador",
+        "rgAnimal": "RG-2024-001",
+        "especie": "Cachorro",
+        "sexo": "M",
+        "cor": "Amarelo",
+        "comportamento": "Muito calmo",
+        "historico": "Encontrado em 2022",
+        "dataCadastro": "2023-04-01",
+        "disponivelParaAdocao": false
+      },
+      "sampleResponse": {
+        "animalDto": {
+          "id": 123,
+          "nome": "Rex Updated"
+        }
+      }
+    },
+    {
+      "name": "Delete animal",
+      "method": "DELETE",
+      "url": "/animals/v1/{id}",
+      "headers": [{ "name": "Authorization", "value": "Bearer <token>" }],
+      "body": null,
+      "sampleResponse": "(204 No Content)"
+    },
+    {
+      "name": "Restore animal",
+      "method": "PATCH",
+      "url": "/animals/v1/{id}/restore",
+      "headers": [{ "name": "Authorization", "value": "Bearer <token>" }],
+      "body": null,
+      "sampleResponse": {
+        "animalDto": { "id": 123, "nome": "Rex" }
+      }
+    },
+    {
+      "name": "Get animal by id",
+      "method": "GET",
+      "url": "/animals/v1/{id}",
+      "headers": [],
+      "body": null,
+      "sampleResponse": {
+        "animalDto": {
+          "id": 123,
+          "nome": "Rex",
+          "idade": 3,
+          "raca": "Labrador",
+          "rgAnimal": "RG-2024-001",
+          "especie": "Cachorro",
+          "sexo": "M",
+          "cor": "Marrom",
+          "comportamento": "Calmo e amigável",
+          "historico": "Encontrado na rua",
+          "dataCadastro": "2023-04-01",
+          "disponivelParaAdocao": true
+        }
+      }
+    },
+    {
+      "name": "List animais disponiveis (paginated)",
+      "method": "GET",
+      "url": "/animals/v1?page=0&size=20",
+      "headers": [],
+      "body": null,
+      "sampleResponse": {
+        "content": [ { "animalDto": { "id": 123, "nome": "Rex" } } ],
+        "page": 0,
+        "size": 20,
+        "totalElements": 100,
+        "totalPages": 5
+      }
+    },
+    {
+      "name": "Create historico de saude",
+      "method": "POST",
+      "url": "/api/v1/historico-saude",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "idAnimal": 123,
+        "tipoEvento": "Doença",
+        "descricao": "Sintomas de gripe, medicado com antibiótico",
+        "castrado": false
+      },
+      "sampleResponse": {
+        "id": 1,
+        "idAnimal": 123,
+        "tipoEvento": "Doença",
+        "descricao": "Sintomas de gripe, medicado com antibiótico",
+        "castrado": false,
+        "dataEvento": "2024-01-15T10:30:00"
+      }
+    },
+    {
+      "name": "Get historico by animal",
+      "method": "GET",
+      "url": "/api/v1/historico-saude/animal/{animalId}",
+      "headers": [],
+      "body": null,
+      "sampleResponse": [
+        {
+          "id": 1,
+          "idAnimal": 123,
+          "tipoEvento": "Doença",
+          "descricao": "Sintomas de gripe",
+          "castrado": false,
+          "dataEvento": "2024-01-15T10:30:00"
+        }
+      ]
+    },
+    {
+      "name": "Get historico by id",
+      "method": "GET",
+      "url": "/api/v1/historico-saude/{id}",
+      "headers": [],
+      "body": null,
+      "sampleResponse": {
+        "id": 1,
+        "idAnimal": 123,
+        "tipoEvento": "Doença",
+        "descricao": "Sintomas de gripe",
+        "castrado": false,
+        "dataEvento": "2024-01-15T10:30:00"
+      }
+    },
+    {
+      "name": "Update historico",
+      "method": "PUT",
+      "url": "/api/v1/historico-saude/{id}",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "idAnimal": 123,
+        "tipoEvento": "Consulta",
+        "descricao": "Consulta de rotina",
+        "castrado": true
+      },
+      "sampleResponse": {
+        "id": 1,
+        "idAnimal": 123,
+        "tipoEvento": "Consulta",
+        "descricao": "Consulta de rotina",
+        "castrado": true,
+        "dataEvento": "2024-01-15T10:30:00"
+      }
+    },
+    {
+      "name": "Delete historico",
+      "method": "DELETE",
+      "url": "/api/v1/historico-saude/{id}",
+      "headers": [],
+      "body": null,
+      "sampleResponse": "(204 No Content)"
+    },
+    {
+      "name": "Create vacinacao",
+      "method": "POST",
+      "url": "/api/v1/vacinacoes",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "idAnimal": 123,
+        "nomeVacina": "V10",
+        "dataAplicacao": "2024-01-15",
+        "dose": "1ª dose",
+        "validade": "2025-01-15",
+        "veterinario": "Dr. João Silva",
+        "observacoes": "Animal tolerou bem a vacina"
+      },
+      "sampleResponse": {
+        "id": 10,
+        "idAnimal": 123,
+        "nomeVacina": "V10"
+      }
+    },
+    {
+      "name": "Get vacinacoes by animal",
+      "method": "GET",
+      "url": "/api/v1/vacinacoes/animal/{animalId}",
+      "headers": [],
+      "body": null,
+      "sampleResponse": [
+        {
+          "id": 10,
+          "idAnimal": 123,
+          "nomeVacina": "V10",
+          "dataAplicacao": "2024-01-15",
+          "dose": "1ª dose",
+          "validade": "2025-01-15",
+          "veterinario": "Dr. João Silva",
+          "observacoes": "OK"
+        }
+      ]
+    },
+    {
+      "name": "Get vacinacao by id",
+      "method": "GET",
+      "url": "/api/v1/vacinacoes/{id}",
+      "headers": [],
+      "body": null,
+      "sampleResponse": {
+        "id": 10,
+        "idAnimal": 123,
+        "nomeVacina": "V10",
+        "dataAplicacao": "2024-01-15",
+        "dose": "1ª dose",
+        "validade": "2025-01-15",
+        "veterinario": "Dr. João Silva",
+        "observacoes": "OK"
+      }
+    },
+    {
+      "name": "Get vencidas vacinacoes",
+      "method": "GET",
+      "url": "/api/v1/vacinacoes/vencidas",
+      "headers": [],
+      "body": null,
+      "sampleResponse": [
+        {
+          "id": 9,
+          "idAnimal": 50,
+          "nomeVacina": "V8",
+          "dataAplicacao": "2020-01-15",
+          "validade": "2021-01-15"
+        }
+      ]
+    },
+    {
+      "name": "Update vacinacao",
+      "method": "PUT",
+      "url": "/api/v1/vacinacoes/{id}",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "idAnimal": 123,
+        "nomeVacina": "V10 Atualizada",
+        "dataAplicacao": "2024-01-15",
+        "dose": "1ª dose",
+        "validade": "2026-01-15",
+        "veterinario": "Dr. João Silva",
+        "observacoes": "Atualizada"
+      },
+      "sampleResponse": {
+        "id": 10,
+        "nomeVacina": "V10 Atualizada"
+      }
+    },
+    {
+      "name": "Delete vacinacao",
+      "method": "DELETE",
+      "url": "/api/v1/vacinacoes/{id}",
+      "headers": [],
+      "body": null,
+      "sampleResponse": "(204 No Content)"
+    },
+    {
+      "name": "Create event (feirinha)",
+      "method": "POST",
+      "url": "/events/v1",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "idResponsavel": 5,
+        "dataInicioFeira": "2025-06-10T08:00:00Z",
+        "dataFimFeira": "2025-06-10T17:00:00Z",
+        "localizacao": "Praça Central",
+        "idsVoluntarios": [1, 2, 3],
+        "idsAnimais": [10, 20, 30]
+      },
+      "sampleResponse": {
+        "idResponsavel": 5,
+        "idFeirinha": 42,
+        "localizacao": "Praça Central"
+      }
+    },
+    {
+      "name": "List events (paginated)",
+      "method": "GET",
+      "url": "/events/v1?page=0&size=20",
+      "headers": [],
+      "body": null,
+      "sampleResponse": {
+        "content": [ { "dto": { "idResponsavel": 5, "idFeirinha": 42 } } ],
+        "page": 0,
+        "size": 20,
+        "totalElements": 10,
+        "totalPages": 1
+      }
+    },
+    {
+      "name": "Get event by id",
+      "method": "GET",
+      "url": "/events/v1/{id}",
+      "headers": [],
+      "body": null,
+      "sampleResponse": {
+        "dto": {
+          "idResponsavel": 5,
+          "idFeirinha": 42,
+          "dataInicioFeira": "2025-06-10T08:00:00Z",
+          "localizacao": "Praça Central",
+          "usuarios": [ { "id": 1, "nome": "Fulano", "email": "fulano@example.com", "data_nascimento": "1990-01-01" } ],
+          "animais": [ { "id": 10, "nome": "Rex" } ]
+        }
+      }
+    },
+    {
+      "name": "Update event",
+      "method": "PUT",
+      "url": "/events/v1/{id}",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "idResponsavel": 5,
+        "dataInicioFeira": "2025-06-10T08:00:00Z",
+        "dataFimFeira": "2025-06-10T18:00:00Z",
+        "localizacao": "Praça Nova",
+        "idsVoluntarios": [1, 2],
+        "idsAnimais": [10, 20]
+      },
+      "sampleResponse": { "dto": { "idFeirinha": 42, "localizacao": "Praça Nova" } }
+    },
+    {
+      "name": "Delete event",
+      "method": "DELETE",
+      "url": "/events/v1/{id}",
+      "headers": [],
+      "body": null,
+      "sampleResponse": "Evento deletado com sucesso. (text)"
+    }
+  ]
+}
