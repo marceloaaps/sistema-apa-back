@@ -19,11 +19,11 @@ public class VacinacaoUseCase {
     private final VacinacaoRepository vacinacaoRepository;
     private final AnimalRepository animalRepository;
 
-    public VacinacaoUseCase(VacinacaoRepository vacinacaoRepository,
-                            AnimalRepository animalRepository) {
+    public VacinacaoUseCase(VacinacaoRepository vacinacaoRepository, AnimalRepository animalRepository) {
         this.vacinacaoRepository = vacinacaoRepository;
         this.animalRepository = animalRepository;
     }
+
 
     @Transactional
     public VacinacaoDto createVacinacao(VacinacaoDto dto) {
