@@ -98,4 +98,13 @@ public class User {
         return this;
     }
 
+    public Boolean getAprovado() {
+        return aprovado;
+    }
+
+    public User setAprovado(Boolean aprovado) {
+        this.aprovado = aprovado;
+        return this;
+    }
+
 }
