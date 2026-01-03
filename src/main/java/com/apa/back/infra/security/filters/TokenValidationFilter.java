@@ -46,8 +46,6 @@ public class TokenValidationFilter extends OncePerRequestFilter {
             }
         }
 
-
-
         filterChain.doFilter(request, response);
     }
 

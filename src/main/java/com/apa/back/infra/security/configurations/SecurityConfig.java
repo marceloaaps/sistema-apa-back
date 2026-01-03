@@ -85,7 +85,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers(
@@ -94,7 +93,6 @@ public class SecurityConfig {
                 "/swagger-ui.html"
         );
     }
-
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
