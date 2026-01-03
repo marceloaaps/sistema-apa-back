@@ -48,7 +48,11 @@ public class SecurityConfig {
                 .addFilterBefore(tokenValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "api-docs/**", "/actuator/**").permitAll()
+                        .requestMatchers("/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/v3/api-docs/**",
+                                "api-docs/**",
+                                "/actuator/**").permitAll()
 
                         // Endpoints liberados para todes
                         .requestMatchers("/auth/v1/login",

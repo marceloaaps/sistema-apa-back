@@ -4,6 +4,8 @@ import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.repositories.AnimalRepository;
 import com.apa.back.core.exceptions.DomainNotFoundException;
 import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
+import com.apa.back.presentation.v1.dtos.animal.HistoricoSaudeDto;
+import com.apa.back.presentation.v1.dtos.animal.VacinacaoDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -115,6 +117,31 @@ public class AnimalUseCase {
     }
 
     private AnimalDto mapToDto(Animal animal) {
+
+        var historicoSaudeDto = animal.getHistoricoSaude().stream()
+                .map(historico -> new HistoricoSaudeDto(
+                        historico.getId(),
+                        historico.getAnimal().getId(),
+                        historico.getTipoEvento(),
+                        historico.getDescricao(),
+                        historico.getCastrado(),
+                        historico.getDataEvento()
+                ))
+                .toList();
+
+        var vacinacaoDto = animal.getVacinacoes().stream()
+                .map(vacinacao -> new VacinacaoDto(
+                        vacinacao.getId(),
+                        vacinacao.getAnimal().getId(),
+                        vacinacao.getNomeVacina(),
+                        vacinacao.getDataAplicacao(),
+                        vacinacao.getDose(),
+                        vacinacao.getValidade(),
+                        vacinacao.getVeterinario(),
+                        vacinacao.getObservacoes()
+                )).toList();
+
+
         return new AnimalDto(
                 animal.getId(),
                 animal.getNome(),
@@ -127,7 +154,11 @@ public class AnimalUseCase {
                 animal.getComportamento(),
                 animal.getHistorico(),
                 animal.getDataCadastro(),
-                animal.getDisponivelParaAdocao()
+                animal.getDisponivelParaAdocao(),
+                animal.getDeletadoEm(),
+                animal.getDeletadoPor(),
+                historicoSaudeDto,
+                vacinacaoDto
         );
     }
 }

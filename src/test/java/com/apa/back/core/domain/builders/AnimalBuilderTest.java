@@ -1,4 +1,4 @@
-package com.apa.back.core.domain.builder;
+package com.apa.back.core.domain.builders;
 
 import com.apa.back.core.domain.entities.Animal;
 import com.apa.back.core.domain.entities.HistoricoSaude;

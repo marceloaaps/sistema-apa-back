@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -45,9 +47,23 @@ public class AnimalDto {
     @Schema(description = "Indica se o animal está disponível para adoção", example = "true")
     private Boolean disponivelParaAdocao;
 
+    @Schema(description = "Data em que o animal foi deletado (soft delete)", example = "2023-05-15")
+    private LocalDate deletadoEm;
+
+    @Schema(description = "ID do usuário que deletou o animal", example = "42")
+    private Integer deletadoPor;
+
+    @Schema(description = "Lista de eventos do histórico de saúde do animal")
+    private List<HistoricoSaudeDto> historicoSaude = new ArrayList<>();
+
+    @Schema(description = "Lista de vacinações do animal")
+    private List<VacinacaoDto> vacinacoes = new ArrayList<>();
+
     public AnimalDto(Long id, String nome, Integer idade, String raca, String rgAnimal,
                      String especie, String sexo, String cor, String comportamento,
-                     String historico, LocalDate dataCadastro, Boolean disponivelParaAdocao) {
+                     String historico, LocalDate dataCadastro, Boolean disponivelParaAdocao,
+                     LocalDate deletadoEm, Integer deletadoPor, List<HistoricoSaudeDto> historicoSaude,
+                     List<VacinacaoDto> vacinacoes) {
         this.id = id;
         this.nome = nome;
         this.idade = idade;
@@ -60,5 +76,9 @@ public class AnimalDto {
         this.historico = historico;
         this.dataCadastro = dataCadastro;
         this.disponivelParaAdocao = disponivelParaAdocao;
+        this.deletadoEm = deletadoEm;
+        this.deletadoPor = deletadoPor;
+        this.historicoSaude = historicoSaude;
+        this.vacinacoes = vacinacoes;
     }
 }

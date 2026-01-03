@@ -94,8 +94,8 @@ class EventControllerTest {
         );
 
         List<AnimalDto> animais = Arrays.asList(
-                new AnimalDto(10L, "Rex", 3, "Labrador", "RG-001", "Cachorro", "M", "Marrom", "Calmo e amigável", "Encontrado na rua, saudável", LocalDate.of(2023, 4, 1), true),
-                new AnimalDto(20L, "Mimi", 2, "Poodle", "RG-002", "Cachorro", "F", "Branco", "Brincalhona", "Resgatada de um abrigo", LocalDate.of(2023, 5, 10), true)
+                new AnimalDto(10L, "Rex", 3, "Labrador", "RG-001", "Cachorro", "M", "Marrom", "Calmo e amigável", "Encontrado na rua, saudável", LocalDate.of(2023, 4, 1), true, null, null, new java.util.ArrayList<>(), new java.util.ArrayList<>()),
+                new AnimalDto(20L, "Mimi", 2, "Poodle", "RG-002", "Cachorro", "F", "Branco", "Brincalhona", "Resgatada de um abrigo", LocalDate.of(2023, 5, 10), true, null, null, new java.util.ArrayList<>(), new java.util.ArrayList<>())
         );
 
         ReturnEventDto returnEventDto = new ReturnEventDto(

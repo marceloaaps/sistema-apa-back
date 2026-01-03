@@ -1,7 +1,6 @@
 package com.apa.back.core.domain.services;
 
 import com.apa.back.core.domain.entities.Animal;
-import com.apa.back.core.domain.builder.AnimalBuilder;
 import com.apa.back.core.domain.repositories.AnimalRepository;
 import org.springframework.stereotype.Service;
 

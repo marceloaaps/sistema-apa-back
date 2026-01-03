@@ -1,6 +1,6 @@
 package com.apa.back.core.domain.entities;
 
-import com.apa.back.core.domain.builder.AnimalBuilder;
+import com.apa.back.core.domain.builders.AnimalBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
