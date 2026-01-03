@@ -38,6 +38,10 @@ public class AuthUseCase {
 
     public LoginResponseDto registerAndGenerateToken(RegisterDto registerDto) {
 
+        if (registerDto.senha().length() >= 72) {
+            throw new DomainConflictException("A senha não pode ter mais de 72 caracteres.");
+        }
+
         User usuario = new User();
         usuario.setNome(registerDto.nome());
         usuario.setEmail(registerDto.email());
