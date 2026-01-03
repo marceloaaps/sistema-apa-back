@@ -1,5 +1,6 @@
 package com.apa.back;
 
+import com.apa.back.core.exceptions.DomainConflictException;
 import com.apa.back.core.use_cases.auth.AuthUseCase;
 import com.apa.back.core.use_cases.auth.PasswordResetUseCase;
 import com.apa.back.presentation.v1.controllers.LoginController;
@@ -18,8 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class LoginControllerTest {
@@ -51,6 +51,18 @@ class LoginControllerTest {
         verify(authUseCase).registerAndGenerateToken(registerDto);
     }
 
+    @Test
+    void register_deveLancarExcecaoParaSenhaInvalida() {
+        RegisterDto registerDto = new RegisterDto("Neymar Jr", "neyney@gmail.com", LocalDate.of(1992,
+                2, 1), "SenhaMuitoLongaQueExcedeSetentaEDoisCaracteres12345678asdasdasdasd2354324342342421@@#34@353453445543434322439045435342423423243243");
+
+       doThrow(new DomainConflictException("A senha não pode ter mais de 72 caracteres")).when(authUseCase).registerAndGenerateToken(any(RegisterDto.class));
+
+        DomainConflictException exception = assertThrows(DomainConflictException.class, () ->
+                loginController.register(registerDto));
+
+        assertEquals("A senha não pode ter mais de 72 caracteres", exception.getMessage());
+    }
 
     @Test
     void login_deveRetornarToken() {
