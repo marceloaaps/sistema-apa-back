@@ -1,7 +1,9 @@
 package com.apa.back.presentation.v1.controllers;
 
+import com.apa.back.core.domain.services.interfaces.AuthRateLimitService;
 import com.apa.back.core.use_cases.auth.AuthUseCase;
 import com.apa.back.core.use_cases.auth.PasswordResetUseCase;
+import com.apa.back.infra.security.configurations.IpResolver;
 import com.apa.back.presentation.v1.dtos.auth.*;
 import com.apa.back.presentation.v1.dtos.auth.login.LoginRequestDto;
 import com.apa.back.presentation.v1.dtos.auth.login.LoginResponseDto;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +25,12 @@ public class LoginController {
 
     private final AuthUseCase authUseCase;
     private final PasswordResetUseCase resetUseCase;
+    private final AuthRateLimitService authRateLimitService;
 
-    public LoginController(AuthUseCase authUseCase, PasswordResetUseCase resetUseCase) {
+    public LoginController(AuthUseCase authUseCase, PasswordResetUseCase resetUseCase, AuthRateLimitService authRateLimitService) {
         this.authUseCase = authUseCase;
         this.resetUseCase = resetUseCase;
+        this.authRateLimitService = authRateLimitService;
     }
 
     @Operation(
@@ -61,7 +66,10 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(
             @Parameter(description = "Credenciais do usuário para login", required = true)
-            @RequestBody LoginRequestDto loginRequestDto) {
+            @RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
+        String ip = IpResolver.resolveIp(request);
+        authRateLimitService.validateAttempt(ip);
+
         var response = authUseCase.login(loginRequestDto);
         return ResponseEntity.status(200).body(response);
     }

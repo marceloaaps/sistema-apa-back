@@ -9,6 +9,7 @@ import com.apa.back.presentation.v1.dtos.auth.login.LoginRequestDto;
 import com.apa.back.presentation.v1.dtos.auth.login.LoginResponseDto;
 import com.apa.back.presentation.v1.dtos.auth.password.ForgotPasswordRequestDto;
 import com.apa.back.presentation.v1.dtos.auth.password.ResetPasswordRequestDto;
+import org.apache.catalina.util.RateLimiter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,6 +33,9 @@ class LoginControllerTest {
 
     @InjectMocks
     private LoginController loginController;
+
+    @Mock
+    private RateLimiter rateLimiter;
 
     @BeforeEach
     void setup() {
@@ -70,7 +74,7 @@ class LoginControllerTest {
         LoginResponseDto loginResponse = new LoginResponseDto("token-jwt-exemplo", 3500L);
         when(authUseCase.login(loginRequest)).thenReturn(loginResponse);
 
-        ResponseEntity<LoginResponseDto> response = loginController.login(loginRequest);
+        ResponseEntity<LoginResponseDto> response = loginController.login(loginRequest, null);
 
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
