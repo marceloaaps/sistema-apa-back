@@ -48,7 +48,7 @@ public class AuthUseCase {
         usuario.setEmail(registerDto.email());
         usuario.setDataNascimento(registerDto.dataNascimento());
         usuario.setSenha(passwordBcrypt.hashPassword(registerDto.senha()));
-        usuario.setUserRole(UserRole.user);
+        usuario.setUserRole(UserRole.USER);
 
         if (userRepository.findByEmail(usuario.getEmail()).isPresent()) {
             throw new DomainConflictException("Esse email já existe.");

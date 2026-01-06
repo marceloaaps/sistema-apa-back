@@ -1,6 +1,7 @@
 package com.apa.back.core.domain.entities;
 
 import com.apa.back.core.domain.enums.UserRole;
+import com.apa.back.core.domain.enums.UserStatus;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -29,8 +30,8 @@ public class User {
     @Column(name = "user_role", columnDefinition = "user_role_enum", insertable = false)
     private UserRole userRole;
 
-    @Column(nullable = false)
-    private Boolean aprovado;
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
 
     public User() {
     }
@@ -98,13 +99,12 @@ public class User {
         return this;
     }
 
-    public Boolean getAprovado() {
-        return aprovado;
+    public UserStatus getUserStatus() {
+        return userStatus;
     }
 
-    public User setAprovado(Boolean aprovado) {
-        this.aprovado = aprovado;
+    public User setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
         return this;
     }
-
 }

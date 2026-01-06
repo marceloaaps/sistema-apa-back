@@ -3,6 +3,7 @@ package com.apa.back.core.domain.repositories;
 import com.apa.back.core.domain.entities.User;
 
 import com.apa.back.core.domain.enums.UserRole;
+import com.apa.back.core.domain.enums.UserStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,5 +31,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("update User u set u.userRole = :userRole where u.id = :id")
     void updateUserRoleById(UserRole userRole, Long id);
 
-    List<User> findAllByAprovadoFalse();
+    List<User> findAllByUserStatus(UserStatus userStatus);
 }
