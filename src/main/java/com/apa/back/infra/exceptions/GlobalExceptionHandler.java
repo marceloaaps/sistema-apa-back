@@ -56,4 +56,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatusCode())
                 .body(Map.of("error", ex.getReason()));
     }
+
+    @ExceptionHandler(RateLimiterReachedException.class)
+    public ResponseEntity<String> handleRateLimiterReachedException(RateLimiterReachedException ex) {
+        return ResponseEntity.status(429).body(ex.getMessage());
+    }
 }

@@ -88,8 +88,10 @@ public class LoginController {
     public ResponseEntity<String> forgotPassword(
             @Parameter(description = "E-mail do usuário para enviar o token de redefinição", required = true)
             @RequestBody ForgotPasswordRequestDto requestPasswordDto, HttpServletRequest request) {
+
         String ip = IpResolver.resolveIp(request);
         authRateLimitService.validateAttempt(ip);
+        
         resetUseCase.sendResetToken(requestPasswordDto.email());
         return ResponseEntity.status(200).body("Token enviado para o email informado.");
     }
