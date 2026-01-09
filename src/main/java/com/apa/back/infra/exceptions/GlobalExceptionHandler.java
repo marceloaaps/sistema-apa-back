@@ -61,4 +61,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleRateLimiterReachedException(RateLimiterReachedException ex) {
         return ResponseEntity.status(429).body(ex.getMessage());
     }
+
+    @ExceptionHandler(UserApprovalErrorException.class)
+    public ResponseEntity<String> handleUserApprovalErrorException(UserApprovalErrorException ex) {
+        return ResponseEntity.status(500).body(ex.getMessage());
+    }
 }

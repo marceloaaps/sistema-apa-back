@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v1/animals")
 public class AnimalController {
+
+    private static final Logger logger = LogManager.getLogger(AnimalController.class);
 
     private final AnimalUseCase animalUseCase;
 
@@ -44,8 +48,10 @@ public class AnimalController {
     public ResponseEntity<AnimalModel> createAnimal(
             @Parameter(description = "Dados do animal para criação", required = true)
             @RequestBody AnimalDto animalDTO) {
+        logger.info("Requisição para criar animal: {}", animalDTO.getNome());
         AnimalDto savedAnimalDto = animalUseCase.createAnimal(animalDTO);
         AnimalModel model = AnimalModelAssembler.toModel(savedAnimalDto);
+        logger.info("Animal criado com sucesso via API - ID: {}", savedAnimalDto.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(model);
     }
 
@@ -65,11 +71,14 @@ public class AnimalController {
             @PathVariable Long id,
             @Parameter(description = "Novos dados do animal", required = true)
             @RequestBody AnimalDto animalDTO) {
+        logger.info("Requisição para atualizar animal ID: {}", id);
         try {
             AnimalDto updatedAnimalDto = animalUseCase.updateAnimal(id, animalDTO);
             AnimalModel model = AnimalModelAssembler.toModel(updatedAnimalDto);
+            logger.info("Animal atualizado com sucesso via API - ID: {}", id);
             return ResponseEntity.ok(model);
         } catch (DomainNotFoundException ex) {
+            logger.warn("Animal não encontrado para atualização via API - ID: {}", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
@@ -88,10 +97,13 @@ public class AnimalController {
     public ResponseEntity<Void> deleteAnimal(
             @Parameter(description = "ID do animal a ser excluído", required = true)
             @PathVariable Long id) {
+        logger.info("Requisição para deletar animal ID: {}", id);
         try {
             animalUseCase.deleteAnimal(id);
+            logger.info("Animal deletado com sucesso via API - ID: {}", id);
             return ResponseEntity.noContent().build();
         } catch (DomainNotFoundException ex) {
+            logger.warn("Animal não encontrado para exclusão via API - ID: {}", id);
             return ResponseEntity.notFound().build();
         }
     }

@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -31,6 +33,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/events/v1")
 public class EventController {
+
+    private static final Logger logger = LogManager.getLogger(EventController.class);
 
     private final EventUseCase eventUseCase;
     private final GetEventsUseCase getEventsUseCase;
@@ -73,7 +77,9 @@ public class EventController {
     )
     @PostMapping
     public ResponseEntity<EventDto> createEvent(@RequestBody EventDto eventRequestDTO) {
+        logger.info("Requisição para criar evento - Localização: {}", eventRequestDTO.localizacao());
         EventDto eventResponse = eventUseCase.createEvent(eventRequestDTO);
+        logger.info("Evento criado com sucesso via API - ID: {}", eventResponse.idFeirinha());
         return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
     }
 

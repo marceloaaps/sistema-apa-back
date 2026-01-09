@@ -6,6 +6,8 @@ import com.apa.back.core.exceptions.DomainNotFoundException;
 import com.apa.back.presentation.v1.dtos.animal.AnimalDto;
 import com.apa.back.presentation.v1.dtos.animal.HistoricoSaudeDto;
 import com.apa.back.presentation.v1.dtos.animal.VacinacaoDto;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import java.util.Optional;
 @Service
 public class AnimalUseCase {
 
+    private static final Logger logger = LogManager.getLogger(AnimalUseCase.class);
+
     private final AnimalRepository animalRepository;
 
     public AnimalUseCase(AnimalRepository animalRepository) {
@@ -23,64 +27,99 @@ public class AnimalUseCase {
     }
 
     public AnimalDto createAnimal(AnimalDto animalDTO) {
-        Animal animal = new Animal();
-        animal.AnimalBuilder(null,
-                animalDTO.getNome(),
-                animalDTO.getIdade(),
-                animalDTO.getRaca(),
-                animalDTO.getRgAnimal(),
-                animalDTO.getEspecie(),
-                animalDTO.getSexo(),
-                animalDTO.getCor(),
-                animalDTO.getComportamento(),
-                animalDTO.getHistorico(),
-                animalDTO.getDataCadastro(),
-                animalDTO.getDisponivelParaAdocao() != null ? animalDTO.getDisponivelParaAdocao() : true);
-        Animal animalRes = animalRepository.save(animal);
+        logger.info("Iniciando criação de animal: {}", animalDTO.getNome());
 
-        return mapToDto(animalRes);
+        try {
+            Animal animal = new Animal();
+            animal.AnimalBuilder(null,
+                    animalDTO.getNome(),
+                    animalDTO.getIdade(),
+                    animalDTO.getRaca(),
+                    animalDTO.getRgAnimal(),
+                    animalDTO.getEspecie(),
+                    animalDTO.getSexo(),
+                    animalDTO.getCor(),
+                    animalDTO.getComportamento(),
+                    animalDTO.getHistorico(),
+                    animalDTO.getDataCadastro(),
+                    animalDTO.getDisponivelParaAdocao() != null ? animalDTO.getDisponivelParaAdocao() : true);
+
+            Animal animalRes = animalRepository.save(animal);
+            logger.info("Animal criado com sucesso - ID: {}, Nome: {}", animalRes.getId(), animalRes.getNome());
+
+            return mapToDto(animalRes);
+
+        } catch (Exception e) {
+            logger.error("Erro ao criar animal: {}", animalDTO.getNome(), e);
+            throw new RuntimeException("Erro ao criar animal", e);
+        }
     }
 
     public AnimalDto updateAnimal(Long id, AnimalDto animalDTO) {
-        Optional<Animal> existingAnimal = animalRepository.findById(id);
+        logger.info("Iniciando atualização do animal ID: {}", id);
 
-        if (existingAnimal.isEmpty()) {
-            throw new DomainNotFoundException("Animal não encontrado: ID " + id);
+        try {
+            Optional<Animal> existingAnimal = animalRepository.findById(id);
+
+            if (existingAnimal.isEmpty()) {
+                logger.warn("Animal não encontrado para atualização - ID: {}", id);
+                throw new DomainNotFoundException("Animal não encontrado: ID " + id);
+            }
+
+            Animal animal = new Animal();
+            animal.AnimalBuilder(
+                    animalDTO.getId(),
+                    animalDTO.getNome(),
+                    animalDTO.getIdade(),
+                    animalDTO.getRaca(),
+                    animalDTO.getRgAnimal(),
+                    animalDTO.getEspecie(),
+                    animalDTO.getSexo(),
+                    animalDTO.getCor(),
+                    animalDTO.getComportamento(),
+                    animalDTO.getHistorico(),
+                    animalDTO.getDataCadastro(),
+                    animalDTO.getDisponivelParaAdocao());
+
+            animalRepository.save(animal);
+            logger.info("Animal atualizado com sucesso - ID: {}, Nome: {}", id, animal.getNome());
+
+            return mapToDto(animal);
+
+        } catch (DomainNotFoundException e) {
+            logger.error("Erro ao atualizar animal: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao atualizar animal ID: {}", id, e);
+            throw new RuntimeException("Erro ao atualizar animal", e);
         }
-
-        Animal animal = new Animal();
-        animal.AnimalBuilder(
-                animalDTO.getId(),
-                animalDTO.getNome(),
-                animalDTO.getIdade(),
-                animalDTO.getRaca(),
-                animalDTO.getRgAnimal(),
-                animalDTO.getEspecie(),
-                animalDTO.getSexo(),
-                animalDTO.getCor(),
-                animalDTO.getComportamento(),
-                animalDTO.getHistorico(),
-                animalDTO.getDataCadastro(),
-                animalDTO.getDisponivelParaAdocao());
-
-
-        animalRepository.save(animal);
-
-        return mapToDto(animal);
     }
 
     public void deleteAnimal(Long id) {
-        Optional<Animal> existingAnimal = animalRepository.findById(id);
+        logger.info("Iniciando soft delete do animal ID: {}", id);
 
-        if (existingAnimal.isEmpty()) {
-            throw new DomainNotFoundException("Animal não encontrado: ID " + id);
+        try {
+            Optional<Animal> existingAnimal = animalRepository.findById(id);
+
+            if (existingAnimal.isEmpty()) {
+                logger.warn("Animal não encontrado para exclusão - ID: {}", id);
+                throw new DomainNotFoundException("Animal não encontrado: ID " + id);
+            }
+
+            Animal animal = existingAnimal.get();
+            animal.setDisponivelParaAdocao(false);
+            animal.setDeletadoEm(LocalDate.now());
+
+            animalRepository.save(animal);
+            logger.info("Animal marcado como deletado com sucesso - ID: {}, Nome: {}", id, animal.getNome());
+
+        } catch (DomainNotFoundException e) {
+            logger.error("Erro ao deletar animal: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao deletar animal ID: {}", id, e);
+            throw new RuntimeException("Erro ao deletar animal", e);
         }
-
-        Animal animal = existingAnimal.get();
-        animal.setDisponivelParaAdocao(false);
-        animal.setDeletadoEm(LocalDate.now());
-
-        animalRepository.save(animal);
     }
 
     public AnimalDto restoreAnimal(Long id) {
@@ -101,14 +140,28 @@ public class AnimalUseCase {
     }
 
     public AnimalDto getAnimalById(Long id) {
-        Optional<Animal> existingAnimal = animalRepository.findById(id);
+        logger.info("Buscando animal por ID: {}", id);
 
-        if (existingAnimal.isEmpty()) {
-            throw new DomainNotFoundException("Animal não encontrado");
+        try {
+            Optional<Animal> existingAnimal = animalRepository.findById(id);
+
+            if (existingAnimal.isEmpty()) {
+                logger.warn("Animal não encontrado - ID: {}", id);
+                throw new DomainNotFoundException("Animal não encontrado");
+            }
+
+            Animal animal = existingAnimal.get();
+            logger.debug("Animal encontrado - ID: {}, Nome: {}", id, animal.getNome());
+
+            return mapToDto(animal);
+
+        } catch (DomainNotFoundException e) {
+            logger.error("Erro ao buscar animal: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao buscar animal ID: {}", id, e);
+            throw new RuntimeException("Erro ao buscar animal", e);
         }
-
-        Animal animal = existingAnimal.get();
-        return mapToDto(animal);
     }
 
     public Page<AnimalDto> getAnimaisDisponiveis(Pageable pageable) {

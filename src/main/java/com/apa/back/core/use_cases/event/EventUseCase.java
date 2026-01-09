@@ -14,6 +14,8 @@ import com.apa.back.core.domain.services.EventDomainService;
 import com.apa.back.core.domain.services.UserDomainService;
 import com.apa.back.presentation.v1.dtos.event.EventDto;
 import jakarta.transaction.Transactional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import java.util.List;
 
 @Service
 public class EventUseCase {
+
+    private static final Logger logger = LogManager.getLogger(EventUseCase.class);
     private final UserDomainService userDomainService;
     private final EventDomainService eventDomainService;
     private final EventAssociationService eventAssociationService;
@@ -53,8 +57,26 @@ public class EventUseCase {
 
     @Transactional
     public EventDto createEvent(EventDto requestDTO) {
-        Event event = saveEvent(requestDTO);
-        return getEventDto(requestDTO, event);
+        logger.info("Iniciando criação de evento - Localização: {}, Responsável ID: {}",
+                requestDTO.localizacao(), requestDTO.idResponsavel());
+
+        try {
+            Event event = saveEvent(requestDTO);
+            EventDto result = getEventDto(requestDTO, event);
+
+            logger.info("Evento criado com sucesso - ID: {}, Localização: {}, Animais: {}, Voluntários: {}",
+                    event.getId(), event.getLocation(),
+                    result.idsAnimais().size(), result.idsVoluntarios().size());
+
+            return result;
+
+        } catch (DomainNotFoundException e) {
+            logger.error("Erro ao criar evento: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao criar evento - Localização: {}", requestDTO.localizacao(), e);
+            throw new RuntimeException("Erro ao criar evento", e);
+        }
     }
 
     private Event saveEvent(EventDto requestDTO) {
@@ -63,30 +85,60 @@ public class EventUseCase {
     }
 
     public void deleteEvent(Long id) {
-        Event event = eventRepository.getEventById(id);
-        if (event == null) {
-            throw new DomainNotFoundException("Event not found with ID: " + id);
+        logger.info("Iniciando exclusão do evento ID: {}", id);
+
+        try {
+            Event event = eventRepository.getEventById(id);
+            if (event == null) {
+                logger.warn("Evento não encontrado para exclusão - ID: {}", id);
+                throw new DomainNotFoundException("Event not found with ID: " + id);
+            }
+
+            // remove associations first to avoid FK constraint issues
+            removeAllAssociationsForEvent(event.getId());
+
+            eventRepository.deleteById(id);
+            logger.info("Evento deletado com sucesso - ID: {}", id);
+
+        } catch (DomainNotFoundException e) {
+            logger.error("Erro ao deletar evento: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao deletar evento ID: {}", id, e);
+            throw new RuntimeException("Erro ao deletar evento", e);
         }
-
-        // remove associations first to avoid FK constraint issues
-        removeAllAssociationsForEvent(event.getId());
-
-        eventRepository.deleteById(id);
     }
 
     @Transactional
     public EventDto updateEvent(Long id, EventDto requestDTO) {
-        Event event = eventRepository.getEventById(id);
-        if (event == null) {
-            throw new DomainNotFoundException("Event not found with ID: " + id);
-        }
-        event.setLocation(requestDTO.localizacao());
-        event.setStartEventDate(requestDTO.dataInicioFeira());
-        event.setFinishEventDate(requestDTO.dataFimFeira());
+        logger.info("Iniciando atualização do evento ID: {}", id);
 
-        eventRepository.save(event);
-        removeAllAssociationsForEvent(event.getId());
-        return getEventDto(requestDTO, event);
+        try {
+            Event event = eventRepository.getEventById(id);
+            if (event == null) {
+                logger.warn("Evento não encontrado para atualização - ID: {}", id);
+                throw new DomainNotFoundException("Event not found with ID: " + id);
+            }
+
+            event.setLocation(requestDTO.localizacao());
+            event.setStartEventDate(requestDTO.dataInicioFeira());
+            event.setFinishEventDate(requestDTO.dataFimFeira());
+
+            eventRepository.save(event);
+            removeAllAssociationsForEvent(event.getId());
+
+            EventDto result = getEventDto(requestDTO, event);
+            logger.info("Evento atualizado com sucesso - ID: {}, Localização: {}", id, event.getLocation());
+
+            return result;
+
+        } catch (DomainNotFoundException e) {
+            logger.error("Erro ao atualizar evento: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao atualizar evento ID: {}", id, e);
+            throw new RuntimeException("Erro ao atualizar evento", e);
+        }
     }
 
     private EventDto getEventDto(EventDto requestDTO, Event event) {
@@ -110,20 +162,36 @@ public class EventUseCase {
             return Collections.emptyList();
         }
 
-        eventAssociationService.validateEventCanReceiveAssociations(event);
+        logger.info("Associando {} animais ao evento ID: {}", idsAnimais.size(), event.getId());
 
-        List<Long> animaisAssociados = new ArrayList<>();
-        for (Long idAnimal : idsAnimais) {
-            Animal animal = animalRepository.findById(idAnimal)
-                    .orElseThrow(() -> new DomainNotFoundException("Animal não encontrado: ID " + idAnimal));
+        try {
+            eventAssociationService.validateEventCanReceiveAssociations(event);
 
-            eventAssociationService.validateAnimalAssociation(animal, event);
+            List<Long> animaisAssociados = new ArrayList<>();
+            for (Long idAnimal : idsAnimais) {
+                Animal animal = animalRepository.findById(idAnimal)
+                        .orElseThrow(() -> {
+                            logger.warn("Animal não encontrado para associação - ID: {}", idAnimal);
+                            return new DomainNotFoundException("Animal não encontrado: ID " + idAnimal);
+                        });
 
-            EventAnimal link = new EventAnimal(animal, event, new EventAnimalId(event.getId(), animal.getId()));
-            eventAnimalRepository.save(link);
-            animaisAssociados.add(animal.getId());
+                eventAssociationService.validateAnimalAssociation(animal, event);
+
+                EventAnimal link = new EventAnimal(animal, event, new EventAnimalId(event.getId(), animal.getId()));
+                eventAnimalRepository.save(link);
+                animaisAssociados.add(animal.getId());
+            }
+
+            logger.info("Animais associados com sucesso ao evento ID: {}", event.getId());
+            return animaisAssociados;
+
+        } catch (DomainNotFoundException e) {
+            logger.error("Erro ao associar animais ao evento ID {}: {}", event.getId(), e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao associar animais ao evento ID: {}", event.getId(), e);
+            throw new RuntimeException("Erro ao associar animais ao evento", e);
         }
-        return animaisAssociados;
     }
 
     private List<Long> associateVolunteersToEvent(Event event, List<Long> idsVoluntarios) {

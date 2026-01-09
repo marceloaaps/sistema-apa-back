@@ -16,12 +16,16 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth/v1")
 public class LoginController {
+
+    private static final Logger logger = LogManager.getLogger(LoginController.class);
 
     private final AuthUseCase authUseCase;
     private final PasswordResetUseCase resetUseCase;
@@ -48,7 +52,9 @@ public class LoginController {
     public ResponseEntity<LoginResponseDto> register(
             @Parameter(description = "Dados para registro do usuário", required = true)
             @Valid @RequestBody RegisterDto registerDto) {
+        logger.info("Requisição de registro recebida para email: {}", registerDto.email());
         LoginResponseDto response = authUseCase.registerAndGenerateToken(registerDto);
+        logger.info("Registro concluído com sucesso para email: {}", registerDto.email());
         return ResponseEntity.status(201).body(response);
     }
 
@@ -68,9 +74,11 @@ public class LoginController {
             @Parameter(description = "Credenciais do usuário para login", required = true)
             @RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
         String ip = IpResolver.resolveIp(request);
+        logger.info("Requisição de login recebida de IP: {} para email: {}", ip, loginRequestDto.email());
         authRateLimitService.validateAttempt(ip);
 
         var response = authUseCase.login(loginRequestDto);
+        logger.info("Login concluído com sucesso para email: {}", loginRequestDto.email());
         return ResponseEntity.status(200).body(response);
     }
 
@@ -90,9 +98,11 @@ public class LoginController {
             @RequestBody ForgotPasswordRequestDto requestPasswordDto, HttpServletRequest request) {
 
         String ip = IpResolver.resolveIp(request);
+        logger.info("Requisição de esqueci senha recebida de IP: {} para email: {}", ip, requestPasswordDto.email());
         authRateLimitService.validateAttempt(ip);
         
         resetUseCase.sendResetToken(requestPasswordDto.email());
+        logger.info("Token de redefinição enviado para email: {}", requestPasswordDto.email());
         return ResponseEntity.status(200).body("Token enviado para o email informado.");
     }
 
@@ -110,7 +120,9 @@ public class LoginController {
     public ResponseEntity<String> resetPassword(
             @Parameter(description = "Dados do token e nova senha para redefinição", required = true)
             @RequestBody ResetPasswordRequestDto request) {
+        logger.info("Requisição de redefinição de senha recebida");
         resetUseCase.resetPassword(request.token(), request.newPassword());
+        logger.info("Senha redefinida com sucesso");
         return ResponseEntity.status(200).body("Senha redefinida com sucesso.");
     }
 
