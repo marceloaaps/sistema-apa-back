@@ -161,7 +161,6 @@ public class AnimalController {
                                     schema = @Schema(implementation = PaginacaoDto.class)))
             }
     )
-
     @GetMapping
     public ResponseEntity<PagedModel<AnimalModel>> getAnimaisDisponiveis(
             @PageableDefault(size = 20) Pageable pageable,
