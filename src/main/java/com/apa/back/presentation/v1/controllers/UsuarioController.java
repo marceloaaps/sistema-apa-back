@@ -2,14 +2,11 @@ package com.apa.back.presentation.v1.controllers;
 
 import com.apa.back.core.use_cases.usuario.UsuarioUseCase;
 import com.apa.back.presentation.v1.dtos.user.UsuarioDto;
-import com.apa.back.presentation.v1.dtos.user.UsuarioRoleDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;

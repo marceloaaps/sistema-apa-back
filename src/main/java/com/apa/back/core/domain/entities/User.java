@@ -31,18 +31,48 @@ public class User {
     private UserRole userRole;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "user_status", columnDefinition = "user_status_enum")
     private UserStatus userStatus;
+
+    @Column(name = "deletado_em")
+    private LocalDate deletadoEm;
+
+    @Column(name = "deletado_por")
+    private Long deletadoPor;
+
 
     public User() {
     }
 
-    public User(LocalDate dataNascimento, String email, Long id, String nome, String senha, UserRole userRole) {
+    public User(String nome, LocalDate dataNascimento, LocalDate deletadoEm, Long deletadoPor, String email,
+                Long id, String senha, UserRole userRole, UserStatus userStatus) {
+        this.nome = nome;
         this.dataNascimento = dataNascimento;
+        this.deletadoEm = deletadoEm;
+        this.deletadoPor = deletadoPor;
         this.email = email;
         this.id = id;
-        this.nome = nome;
         this.senha = senha;
         this.userRole = userRole;
+        this.userStatus = userStatus;
+    }
+
+    public LocalDate getDeletadoEm() {
+        return deletadoEm;
+    }
+
+    public User setDeletadoEm(LocalDate deletadoEm) {
+        this.deletadoEm = deletadoEm;
+        return this;
+    }
+
+    public Long getDeletadoPor() {
+        return deletadoPor;
+    }
+
+    public User setDeletadoPor(Long deletadoPor) {
+        this.deletadoPor = deletadoPor;
+        return this;
     }
 
     public Long getId() {
