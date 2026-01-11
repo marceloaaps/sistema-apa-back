@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/historico-saude")
+@RequestMapping("/v1/historico-saude")
 @Tag(name = "Histórico de Saúde", description = "Endpoints para gerenciamento do histórico de saúde dos animais")
 public class HistoricoSaudeController {
 

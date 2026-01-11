@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/vacinacoes")
+@RequestMapping("/v1/vacinacoes")
 @Tag(name = "Vacinações", description = "Endpoints para gerenciamento de vacinações dos animais")
 public class VacinacaoController {
 

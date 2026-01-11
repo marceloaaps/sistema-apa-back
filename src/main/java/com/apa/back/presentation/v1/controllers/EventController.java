@@ -31,7 +31,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Tag(name = "Eventos (Feirinhas)", description = "API para gerenciamento de eventos (feirinhas).")
 @RestController
-@RequestMapping("/events/v1")
+@RequestMapping("/v1/events")
 public class EventController {
 
     private static final Logger logger = LogManager.getLogger(EventController.class);

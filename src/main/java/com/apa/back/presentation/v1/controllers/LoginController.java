@@ -22,7 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth/v1")
+@RequestMapping("/v1/auth")
 public class LoginController {
 
     private static final Logger logger = LogManager.getLogger(LoginController.class);
