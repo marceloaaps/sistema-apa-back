@@ -6,13 +6,19 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import java.util.Properties;
 
 @Service
 public class EmailUseCase {
 
+    private static final Logger logger = LogManager.getLogger(EmailUseCase.class);
+
     public void sendEmail(String to, String subject, String body) {
+        logger.info("Iniciando envio de email - Para: {}, Assunto: {}", to, subject);
+
         final String from = "no-reply@apa.com";
 
         Properties props = new Properties();
@@ -35,9 +41,17 @@ public class EmailUseCase {
 
             Transport.send(message);
 
+            logger.info("Email enviado com sucesso - Para: {}, Assunto: {}", to, subject);
+
         } catch (MessagingException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Falha ao enviar e-mail: " + e.getMessage());
+            logger.error("Falha ao enviar email - Para: {}, Assunto: {}, Erro: {}",
+                    to, subject, e.getMessage(), e);
+            throw new RuntimeException("Falha ao enviar e-mail: " + e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao enviar email - Para: {}", to, e);
+            throw new RuntimeException("Erro inesperado ao enviar e-mail", e);
         }
     }
 }
+
+

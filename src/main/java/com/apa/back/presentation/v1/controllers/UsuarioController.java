@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -41,15 +42,5 @@ public class UsuarioController {
         return user.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(404).body(null));
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDto> updateRole(@PathVariable Long id, @RequestBody UsuarioRoleDto usuarioRoleDto) {
-
-        UsuarioDto user = userUseCase.updateUsuario(id, usuarioRoleDto);
-        return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(user);
-    }
-
-
-
 
 }

@@ -123,20 +123,33 @@ public class AnimalUseCase {
     }
 
     public AnimalDto restoreAnimal(Long id) {
-        Optional<Animal> existingAnimal = animalRepository.findById(id);
+        logger.info("Iniciando restauração do animal ID: {}", id);
 
-        if (existingAnimal.isEmpty()) {
-            throw new DomainNotFoundException("Animal não encontrado: ID " + id);
+        try {
+            Optional<Animal> existingAnimal = animalRepository.findById(id);
+
+            if (existingAnimal.isEmpty()) {
+                logger.warn("Animal não encontrado para restauração - ID: {}", id);
+                throw new DomainNotFoundException("Animal não encontrado: ID " + id);
+            }
+
+            Animal animal = existingAnimal.get();
+            animal.setDeletadoEm(null);
+            animal.setDeletadoPor(null);
+            animal.setDisponivelParaAdocao(true);
+
+            animalRepository.save(animal);
+            logger.info("Animal restaurado com sucesso - ID: {}, Nome: {}", id, animal.getNome());
+
+            return mapToDto(animal);
+
+        } catch (DomainNotFoundException e) {
+            logger.error("Erro ao restaurar animal: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao restaurar animal ID: {}", id, e);
+            throw new RuntimeException("Erro ao restaurar animal", e);
         }
-
-        Animal animal = existingAnimal.get();
-        animal.setDeletadoEm(null);
-        animal.setDeletadoPor(null);
-        animal.setDisponivelParaAdocao(true);
-
-        animalRepository.save(animal);
-
-        return mapToDto(animal);
     }
 
     public AnimalDto getAnimalById(Long id) {

@@ -4,16 +4,31 @@
     <Appenders>
 
         <Console name="ConsoleAppender" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss} %-5level %c{1} - %msg%n"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <RollingFile name="XMLRollingFileAppender"
-                     fileName="target/logfile.xml"
-                     filePattern="target/logfile-%d{yyyy-MM-dd}-%i.xml.gz">
-            <XMLLayout/>
+        <RollingFile name="JsonRollingFileAppender"
+                     fileName="${LOG_FOLDER}/logfile.json"
+                     filePattern="${LOG_FOLDER}/logfile-%d{yyyy-MM-dd}-%i.json.gz">
+            <JsonLayout compact="true" eventEol="true" properties="true" stacktraceAsString="true"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="10MB"/>
+                <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+
+        <RollingFile name="FileAppender"
+                     fileName="${LOG_FOLDER}/application.log"
+                     filePattern="${LOG_FOLDER}/application-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
         </RollingFile>
 
     </Appenders>
@@ -22,8 +37,15 @@
 
         <Logger name="com.apa.back"
                 level="INFO"
-                additivity="true">
-            <AppenderRef ref="XMLRollingFileAppender"/>
+                additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="JsonRollingFileAppender"/>
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+
+        <!-- Logger para SQL -->
+        <Logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
         </Logger>
 
         <Root level="INFO">
