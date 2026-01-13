@@ -33,12 +33,20 @@ services:
     depends_on:
       - postgres
       - redis
+      - mailhog
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      SERVER_PORT: 8080
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}  # Sobrescreve o URL de conexão para apontar ao container postgres
+      SERVER_PORT: ${SERVER_PORT:-8080}
+      REDIS_HOST: redis
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      LOG_FOLDER: ${LOG_FOLDER:-/app/logs/}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: ${REDIS_PORT:-6379}
+    volumes:
+      - ./logs:/app/logs
 
 volumes:
   pgdata:
